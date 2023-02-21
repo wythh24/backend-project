@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\productstockingv1.props" />
+</Project>
