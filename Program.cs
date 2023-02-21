@@ -1,3 +1,5 @@
+using System.Reflection;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using productstockingv1.Data;
 
@@ -10,6 +12,12 @@ builder.Services.AddDbContext<ProductContext>(
         options.UseMySql(builder.Configuration.GetConnectionString("Development"),
             Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.23-mysql"));
     });
+
+builder.Services.AddFluentValidation();
+
+// add validation
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
