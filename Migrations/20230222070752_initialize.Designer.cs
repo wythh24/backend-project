@@ -10,7 +10,7 @@ using productstockingv1.Data;
 namespace productstockingv1.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20230221083654_initialize")]
+    [Migration("20230222070752_initialize")]
     partial class initialize
     {
         /// <inheritdoc />
@@ -33,7 +33,6 @@ namespace productstockingv1.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar");
 

@@ -24,7 +24,7 @@ namespace productstockingv1.Migrations
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<decimal>(type: "dec(10,2)", nullable: false),
-                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

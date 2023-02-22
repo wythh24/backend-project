@@ -1,13 +1,88 @@
-### Get all products
-POST https://localhost:7170/api/Product/getall
+### (passed) Get all products (body)
+POST https://localhost:7170/api/Product/getAll
+Content-Type: application/json
 
-### Create product
+{
+  "id": [
+    "a7441313-532e-4766-a972-47be0b62c155"
+  ]
+}
+
+### (passed) Get all products (body)
+GET https://localhost:7170/api/Product/test
+Content-Type: application/json
+
+{
+  "id": [
+    "a7441313-532e-4766-a972-47be0b62c155"
+  ]
+}
+### (passed)  Create product
 POST https://localhost:7170/api/Product
 Content-Type: application/json
 
 {
-  "name": "{{$random.alphabetic(10)}}",
-  "price": "{{$random.float(12.2)}}",
-  "description": ""
+  "command": [
+    {
+      "name": "{{$random.alphabetic(10)}}",
+      "price": "{{$random.float(12.2)}}",
+      "description": null,
+      "code": "{{$random.float(10.2)}}"
+    },
+    {
+      "name": "{{$random.alphabetic(10)}}",
+      "price": "{{$random.float(12.2)}}",
+      "description": null,
+      "code": "{{$random.float(10.2)}}"
+    }
+
+  ]
 }
-  
+
+### (passed) get a product by id (body) 
+GET https://localhost:7170/api/Product/GetById/
+Content-Type: application/json
+
+{
+  "id": "a7441313-532e-4766-a972-47be0b62c155"
+}
+
+### (passed) get a product by id 
+GET https://localhost:7170/api/Product/a7441313-532e-4766-a972-47be0b62c155
+
+### delete product as list
+DELETE https://localhost:7170/api/Product/
+Content-Type: application/json
+
+{
+  "id": [
+    "a7441313-532e-4766-a972-47be0b62c155"
+  ]
+}
+
+### get all product
+POST https://localhost:7170/api/Product/getAll
+Content-Type: application/json
+
+{
+  "id": null
+}
+
+### update product
+PUT https://localhost:7170/api/Product/
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "id": "df06fb32-d840-4abc-bbfd-178e3e742fc1",
+      "name": "1111",
+      "price": 20.0
+    },
+    {
+      "id": "9bbd9f6f-5e1c-4cf8-a952-5bb65cd39dd2",
+      "name": "2222",
+      "price": 10.0
+    }
+  ]
+}
