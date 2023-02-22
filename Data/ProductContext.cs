@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using productstockingv1.Interfaces;
 using productstockingv1.models;
 
 namespace productstockingv1.Data;
 
-public class ProductContext : DbContext
+public class ProductContext : DbContext, IProductContext
 {
     public ProductContext(DbContextOptions options) : base(options)
     {
