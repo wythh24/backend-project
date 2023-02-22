@@ -10,7 +10,7 @@ builder.Services.AddDbContext<ProductContext>(
                options =>
                {
 
-                   options.UseSqlServer(builder.Configuration.GetConnectionString("Development"));
+                   options.UseSqlServer(builder.Configuration.GetConnectionString("Developments"));
                },
                ServiceLifetime.Transient
                );

@@ -1,12 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
     "\\Data",
     "\\EntityConfiguration",
     "\\EntityMapping",
     "\\Migrations"
   ],
-  "SelectedNode": "\\Program.cs",
   "PreviewInSolutionExplorer": false
 }
