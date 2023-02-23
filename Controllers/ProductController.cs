@@ -69,28 +69,24 @@ namespace productstockingv1.Controllers
                 }
             }
 
-            else if (id.Id == null || string.IsNullOrEmpty(id.Id.ToString()) || id.Id.ToString() == "string")
+            else if (
+                id.Id == null
+                || string.IsNullOrEmpty(id.Id.ToString())
+                || id.Id.ToString() == "string"
+            )
             {
                 var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
 
                 var result = _mapper.Map<List<ProductResponse>>(all);
 
-                return Ok(new
-                {
-                    success = true,
-                    status = 200,
-                    message = $"Successfully returned all products",
-                    data = result
-                });
+                return Ok(ExtenFunction.ResponseDefault(
+                    "Product",
+                    result,
+                    false
+                ));
             }
 
-            return Ok(new
-            {
-                success = true,
-                status = 200,
-                message = $"Successfully returned {ProductList.Count} products",
-                data = ProductList
-            });
+            return Ok(ExtenFunction.ResponseDefault("Product", ProductList));
         }
 
         // query string
@@ -99,63 +95,41 @@ namespace productstockingv1.Controllers
         {
             var productList = new List<Product>();
 
-
             if (id != null)
             {
                 var product = await _context.getRepository<Product, string>().GetAsync(id);
-                productList.Add(product);
+                if (product != null) productList.Add(product);
             }
 
-            if (productList.Count >= 0)
-                return Ok(new
-                {
-                    success = true,
-                    statusCode = 302,
-                    data = productList
-                });
-            productList = null;
-            return Ok(new
-            {
-                success = false,
-                statusCode = 404,
-                message = $"The product with the id {id} was not found",
-                data = productList
-            });
+            //passed
+            return Ok(productList.Count > 0
+                ? ExtenFunction.ResponseDefault("Product", productList, false, 302)
+                : ExtenFunction.ResponseDefault("Product", productList, false)
+            );
         }
 
         [HttpGet("GetById")]
         public async Task<ActionResult> GetByBodyId([FromBody] GetT req)
         {
-            bool IsSuccess = true;
-            var StatusCode = 302;
-            var _message = "Successfully returned all products";
+            var productList = new List<Product>();
 
-            if (req == null) return BadRequest("Id must be filled");
-
-            var product = await _context.getRepository<Product, string>().GetAsync(req.Id);
-
-            if (product == null)
+            if (req.Id != null)
             {
-                IsSuccess = false;
-                StatusCode = 404;
-                _message = $"The product with id {req.Id} was not found";
-                product = null;
+                var product = await _context.getRepository<Product, string>().GetAsync(req.Id);
+                if (product != null) productList.Add(product);
             }
 
-            return Ok(new
-            {
-                success = IsSuccess,
-                status = StatusCode,
-                message = _message,
-                data = product
-            });
+            return Ok(productList.Count > 0
+                ? ExtenFunction.ResponseDefault("Product", productList, false, 302)
+                : ExtenFunction.ResponseDefault("Product", productList, false));
         }
 
         // create product
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(ListProductCreateReq req)
         {
-            if (req == null) return BadRequest("Request must be filled");
+            //change to Any()
+            if (!req.command.Any()) return BadRequest("Request must be filled");
 
             var productList = req.command.Select(item => _mapper.Map<Product>(item)).ToList();
 

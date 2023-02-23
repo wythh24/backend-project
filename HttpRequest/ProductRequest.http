@@ -43,11 +43,11 @@ GET https://localhost:7170/api/Product/GetById/
 Content-Type: application/json
 
 {
-  "id": "a7441313-532e-4766-a972-47be0b62c155"
+  "id": "73b3cb2f-77a2-41e5-ae86-014ba18883b"
 }
 
-### (passed) get a product by id 
-GET https://localhost:7170/api/Product/a7441313-532e-4766-a972-47be0b62c155
+### (passed) get a product by id (query)
+GET https://localhost:7170/api/Product/73b3cb2f-77a2-41e5-ae86-014ba188843
 
 ### delete product as list
 DELETE https://localhost:7170/api/Product/
