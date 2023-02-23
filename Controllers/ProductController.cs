@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace productstockingv1.Controllers
         }
 
         // get product with post body (POST)
+        [EnableCors()]
         [HttpPost("getAll")]
         public async Task<ActionResult> GetProduct(IdReq id = null)
         {
