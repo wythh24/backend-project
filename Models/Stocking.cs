@@ -1,8 +1,16 @@
-﻿namespace productstockingv1.models;
+using productstockingv1.Interfaces;
 
-public class Stocking
+namespace productstockingv1.models;
+
+public class Stocking : IKey<string>
 {
-    public string id { get; set; }
-    public DateTimeOffset documentDate { get; set; }
-    public DateTimeOffset postingDate { get; set; }
+    public string Id { get; set; } = null!;
+    public string ProductId { get; set; } = null!;
+    public string WareId { get; set; } = null!;
+    public int? Quantity { get; set; }
+    public DateTime? DocumentDate { get; set; }
+    public DateTime? PostingDate { get; set; }
+
+    public Product product { get; set; } = null!;
+    public Ware Ware { get; set; } = null!;
 }
