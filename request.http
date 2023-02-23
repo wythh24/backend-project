@@ -1,0 +1,13 @@
+### Get all products
+POST https://localhost:7170/api/Product/getall
+
+### Create product
+POST https://localhost:7170/api/Product
+Content-Type: application/json
+
+{
+  "name": "{{$random.alphabetic(10)}}",
+  "price": "{{$random.float(12.2)}}",
+  "description": ""
+}
+  

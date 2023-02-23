@@ -1,8 +1,14 @@
 using System.Reflection;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using productstockingv1.Data;
 using productstockingv1.models;
+using productstockingv1.Interfaces;
+using productstockingv1.Repository;
+using productstockingv1.Models.Request;
+using productstockingv1.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +20,19 @@ builder.Services.AddDbContext<ProductContext>(
                },
                ServiceLifetime.Transient
                );
+//add dbcontext
+builder.Services.AddDbContext<IProductContext, ProductContext>();
+
+//add scope
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
+
+//add validation
+builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();
 
 builder.Services.AddFluentValidation();
 
-// add validation
+// add mapper
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 
 
@@ -32,7 +47,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    // app.UseSwaggerUI();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
