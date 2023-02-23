@@ -24,6 +24,9 @@ builder.Services.AddDbContext<IProductContext, ProductContext>();
 //add scope
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
+builder.Services.AddScoped<IRepository<Ware, string>, WareRepository>();
+builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
+
 
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();

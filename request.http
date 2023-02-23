@@ -9,14 +9,7 @@ Content-Type: application/json
 }
 
 ### (passed) Get all products (body)
-GET https://localhost:7170/api/Product/test
-Content-Type: application/json
-
-{
-  "id": [
-    "a7441313-532e-4766-a972-47be0b62c155"
-  ]
-}
+  
 ### (passed)  Create product
 POST https://localhost:7170/api/Product
 Content-Type: application/json

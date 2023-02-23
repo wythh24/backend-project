@@ -15,4 +15,6 @@ public interface IProductContext
     void Dispose();
 
     DbSet<Product> Products { get; set; }
+    DbSet<Ware> Wares { get; set; }
+    DbSet<Stocking> Stockings { get; set; }
 }

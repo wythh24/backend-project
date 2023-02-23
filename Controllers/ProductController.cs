@@ -28,7 +28,6 @@ namespace productstockingv1.Controllers
         }
 
         // get product with post body (POST)
-        [EnableCors()]
         [HttpPost("getAll")]
         public async Task<ActionResult> GetProduct(IdReq id = null)
         {
@@ -68,7 +67,7 @@ namespace productstockingv1.Controllers
         }
 
         // request with body (GET)
-        [HttpGet("test")]
+        [HttpGet]
         public async Task<ActionResult> GetProductById(IdReq id = null)
         {
             var ProductList = new List<Product>();

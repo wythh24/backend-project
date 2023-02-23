@@ -12,6 +12,8 @@ public class ProductContext : DbContext, IProductContext
     }
 
     public DbSet<Product> Products { get; set; }
+    public DbSet<Ware> Wares { get; set; }
+    public DbSet<Stocking> Stockings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
