@@ -1,0 +1,6 @@
+﻿### (in fixed) Get all Product in get
+GET https://localhost:7170/api/Stock/GetAll
+Content-Type: application/json
+{
+  "Id": null
+}

@@ -3,13 +3,19 @@ POST https://localhost:7170/api/Product/getAll
 Content-Type: application/json
 
 {
-  "id": [
-    "a7441313-532e-4766-a972-47be0b62c155"
-  ]
+  "id": null
 }
 
 ### (passed) Get all products (body)
-  
+GET https://localhost:7170/api/Product
+Content-Type: application/json
+
+{
+  "id": [
+    "CBC9FC90-CACF-421D-80BE-F173945E3162"
+  ]
+}
+
 ### (passed)  Create product
 POST https://localhost:7170/api/Product
 Content-Type: application/json
