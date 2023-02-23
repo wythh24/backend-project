@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Data",
-    "\\EntityMapping",
+    "\\Controllers",
+    "\\EntityConfiguration",
     "\\Interfaces",
     "\\Migrations",
     "\\Models",
-    "\\Models\\Request",
-    "\\Models\\Response",
+    "\\obj",
+    "\\Properties",
     "\\Repository",
     "\\Validation"
   ],
-  "SelectedNode": "\\Program.cs",
+  "SelectedNode": "\\Interfaces\\IUnitOfWork.cs",
   "PreviewInSolutionExplorer": false
 }
