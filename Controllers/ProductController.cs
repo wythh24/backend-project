@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using productstockingv1.Data;
+using productstockingv1.ExtensionFunction;
 using productstockingv1.Interfaces;
 using productstockingv1.models;
 using productstockingv1.Models.Request;
@@ -47,23 +48,10 @@ namespace productstockingv1.Controllers
 
                 var result = _mapper.Map<List<ProductResponse>>(all);
 
-                return Ok(new
-                {
-                    success = true,
-                    status = 200,
-                    message = $"Successfully returned all products",
-                    data = result
-                });
+                return Ok(ExtenFunction.ResponseDefault("Product", result, false));
             }
 
-
-            return Ok(new
-            {
-                success = true,
-                status = 200,
-                message = $"Successfully returned {ProductList.Count} products",
-                data = ProductList
-            });
+            return Ok(ExtenFunction.ResponseDefault("Product", ProductList));
         }
 
         // request with body (GET)
@@ -118,22 +106,19 @@ namespace productstockingv1.Controllers
                 productList.Add(product);
             }
 
-            if (productList.Count < 0)
-            {
-                productList = null;
+            if (productList.Count >= 0)
                 return Ok(new
                 {
-                    success = false,
-                    statusCode = 404,
-                    message = $"The product with the id {id} was not found",
+                    success = true,
+                    statusCode = 302,
                     data = productList
                 });
-            }
-
+            productList = null;
             return Ok(new
             {
-                success = true,
-                statusCode = 302,
+                success = false,
+                statusCode = 404,
+                message = $"The product with the id {id} was not found",
                 data = productList
             });
         }
@@ -142,8 +127,8 @@ namespace productstockingv1.Controllers
         public async Task<ActionResult> GetByBodyId([FromBody] GetT req)
         {
             bool IsSuccess = true;
-            int StatusCode = 302;
-            string _message = "Successfully returned all products";
+            var StatusCode = 302;
+            var _message = "Successfully returned all products";
 
             if (req == null) return BadRequest("Id must be filled");
 

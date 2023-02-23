@@ -1,0 +1,3 @@
+### get all or specific ware
+GET https://localhost:7170/api/Ware
+Content-Type: application/json
