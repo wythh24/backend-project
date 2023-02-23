@@ -1,4 +1,4 @@
-﻿using System;
+﻿namespace productstockingv1.models;
 
 public class ProductResponse
 {

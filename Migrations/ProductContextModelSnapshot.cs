@@ -30,7 +30,6 @@ namespace productstockingv1.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar");
 
