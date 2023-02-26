@@ -55,6 +55,7 @@ public class UnitOfWork : IDisposable, IUnitOfWork
     }
 
     public IRepository<TE, TK> getRepository<TE, TK>() where TE : class, IKey<TK>
+        // IKey1<TK>
     {
         var type = typeof(TE).Name;
         if (!_repository.ContainsKey(type))
@@ -73,7 +74,6 @@ public class UnitOfWork : IDisposable, IUnitOfWork
         }
         return (IRepository<TE, TK>)_repository[type];
     }
-
     private void Dispose(bool disposing)
     {
         if(!_disposed)

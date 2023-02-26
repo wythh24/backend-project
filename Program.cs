@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
 builder.Services.AddScoped<IRepository<Ware, string>, WareRepository>();
 builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
-
+// builder.Services.AddControllers()
+//     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();

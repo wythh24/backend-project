@@ -7,3 +7,8 @@ public class StockCreateRequest
     public DateTimeOffset? documentDate { get; set; }
     public DateTimeOffset? postionDate { get; set; }
 }
+
+public class StockGetById
+{
+    public string Id { get; set; } = "";
+}

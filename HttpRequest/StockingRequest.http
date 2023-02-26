@@ -1,6 +1,35 @@
-﻿### (in fixed) Get all Product in get
-GET https://localhost:7170/api/Stock/GetAll
+﻿### (Completed) Get all Stocking in get No.27
+GET https://localhost:7170/api/Stock/Getall
 Content-Type: application/json
+
 {
-  "Id": null
+  "id": null
+}
+
+###(Completed) Get all Stocking in post No.83
+POST https://localhost:7170/api/Stock
+Content-Type: application/json
+
+{
+  "id": null
+}
+###(completed) Get By Id query string No.138
+GET https://localhost:7170/api/Stock/FA3E2999-712B-44B8-914B-CEE41EF3A184
+
+### (Completed) Get By Id Body 
+GET https://localhost:7170/api/Stock/GetById
+Content-Type: application/json
+
+{
+  "id": "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+}
+
+### (On Develop) Get By ProductId
+GET https://localhost:7170/api/Stock/GetByProduct
+Content-Type: application/json
+
+{
+  "ProductId": [
+    "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+  ]
 }

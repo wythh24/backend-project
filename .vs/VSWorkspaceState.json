@@ -1,11 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
     "\\EntityConfiguration",
     "\\Interfaces",
     "\\Migrations",
     "\\Models",
+    "\\Models\\Request",
     "\\obj",
     "\\Properties",
     "\\Repository",

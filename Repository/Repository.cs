@@ -3,6 +3,7 @@ using productstockingv1.Interfaces;
 namespace productstockingv1.Repository;
 
 public class Repository<TE, TK> : IRepository<TE, TK> where TE : class, IKey<TK>
+     
 {
     private readonly IProductContext _context;
     private IRepository<TE, TK> _repositoryImplementation;
@@ -13,7 +14,8 @@ public class Repository<TE, TK> : IRepository<TE, TK> where TE : class, IKey<TK>
     public IQueryable<TE> GetAllQueryable() => _context.Set<TE>().AsQueryable();
 
     public TE? Get(TK id) => _context.Set<TE>().Find(id);
-
+    public TE? Getpro(TK productid) => _context.Set<TE>().Find(productid);
+    public async Task<TE?> GetAsyncd(TK productid) => await Task.FromResult(Getpro(productid));
     public async Task<TE?> GetAsync(TK id) => await Task.FromResult(Get(id));
 
     public void Create(TE entity)

@@ -17,8 +17,9 @@ public interface IRepository<TE, TK> where TE : class, IKey<TK>
     Task DeleteBatchAsync(IEnumerable<TE> entity);
 
     TE? Get(TK id);
+    TE? Getpro(TK productid);
     Task<TE?>? GetAsync(TK id);
-
+    Task<TE?>? GetAsyncd(TK productid);
     IQueryable<TE> GetAllQueryable();
 
     void Update(TE entity);

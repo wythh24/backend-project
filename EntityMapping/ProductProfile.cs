@@ -29,3 +29,13 @@ public class StockProfile : Profile
         CreateMap<Stocking,StockResponse>();
     }
 }
+
+public class WareProfile : Profile
+{
+    private readonly Random _getCode = new Random();
+
+    public WareProfile()
+    {
+        CreateMap<Ware,WareResponse>();
+    }
+}

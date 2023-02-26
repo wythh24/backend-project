@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using productstockingv1.models;
-
 namespace productstockingv1.EntityConfiguration;
 
 public class ProductConfig : IEntityTypeConfiguration<Product>
