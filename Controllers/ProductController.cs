@@ -42,7 +42,11 @@ namespace productstockingv1.Controllers
                 }
             }
 
-            else if (id.Id == null || string.IsNullOrEmpty(id.Id.ToString()) || id.Id.ToString() == "string")
+            else if (
+                id.Id == null
+                || string.IsNullOrEmpty(id.Id.ToString())
+                || id.Id.ToString() == "string"
+            )
             {
                 var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
 
@@ -60,7 +64,7 @@ namespace productstockingv1.Controllers
         {
             var ProductList = new List<Product>();
 
-            if (id.Id != null && id.Id.ToString() != "string")
+            if (id.Id != null)
             {
                 foreach (var item in id.Id)
                 {
@@ -69,11 +73,7 @@ namespace productstockingv1.Controllers
                 }
             }
 
-            else if (
-                id.Id == null
-                || string.IsNullOrEmpty(id.Id.ToString())
-                || id.Id.ToString() == "string"
-            )
+            else if (string.IsNullOrEmpty(id.Id.ToString()))
             {
                 var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
 

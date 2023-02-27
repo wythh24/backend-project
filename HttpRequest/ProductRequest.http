@@ -12,7 +12,8 @@ Content-Type: application/json
 
 {
   "id": [
-    "a7441313-532e-4766-a972-47be0b62c155"
+    "73b3cb2f-77a2-41e5-ae86-014ba188843b"
+    
   ]
 }
 
@@ -59,7 +60,7 @@ Content-Type: application/json
   ]
 }
 
-### get all product
+### get list of product
 POST https://localhost:7170/api/Product/getAll
 Content-Type: application/json
 

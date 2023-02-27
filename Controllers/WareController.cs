@@ -29,6 +29,7 @@ namespace productstockingv1.Controllers
         public async Task<ActionResult> GetWare()
         {
             var list = new List<Ware>();
+            
             return Ok(ExtenFunction.ResponseDefault("Ware", list));
         }
     }
