@@ -1,23 +1,26 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using productstockingv1.Data;
-using productstockingv1.Interfaces;
 using productstockingv1.models;
-using productstockingv1.Models.Request;
+using productstockingv1.Interfaces;
 using productstockingv1.Repository;
+using productstockingv1.Models.Request;
 using productstockingv1.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddDbContext<ProductContext>(
-    options =>
-    {
-        options.UseMySql(builder.Configuration.GetConnectionString("Development"),
-            Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.23-mysql"));
-    });
+               options =>
+               {
+
+                   options.UseSqlServer(builder.Configuration.GetConnectionString("Developments"));
+               },
+               ServiceLifetime.Transient
+               );
 //add dbcontext
 builder.Services.AddDbContext<IProductContext, ProductContext>();
 
@@ -26,7 +29,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
 builder.Services.AddScoped<IRepository<Ware, string>, WareRepository>();
 builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
-
+// builder.Services.AddControllers()
+//     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();

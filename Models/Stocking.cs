@@ -2,7 +2,8 @@ using productstockingv1.Interfaces;
 
 namespace productstockingv1.models;
 
-public class Stocking : IKey<string>
+public class 
+    Stocking : IKey<string>
 {
     public string Id { get; set; } = null!;
     public string ProductId { get; set; } = null!;
@@ -11,6 +12,6 @@ public class Stocking : IKey<string>
     public DateTime? DocumentDate { get; set; }
     public DateTime? PostingDate { get; set; }
 
-    public Product product { get; set; } = null!;
-    public Ware Ware { get; set; } = null!;
+    public Product? product { get; set; } = null!;
+    public Ware? Ware { get; set; } = null!;
 }

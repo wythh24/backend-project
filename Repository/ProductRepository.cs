@@ -9,3 +9,11 @@ public class ProductRepository : Repository<Product, string>
     {
     }
 }
+
+public class StockRepository : Repository<Stocking, string>
+{
+    public StockRepository(IProductContext context) : base(context)
+    {
+        
+    }
+}

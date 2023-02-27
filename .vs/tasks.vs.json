@@ -1,0 +1,30 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-Models",
+      "appliesTo": "Models/",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-Stocking",
+      "appliesTo": "Models/Stocking.cs",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-Product",
+      "appliesTo": "Models/Product.cs",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-Stocking",
+      "appliesTo": "Models/Stocking.cs",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-Response",
+      "appliesTo": "Models/Response/",
+      "type": "launch"
+    }
+  ]
+}

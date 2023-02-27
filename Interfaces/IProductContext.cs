@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using productstockingv1.models;
+using AutoMapper;
+using productstockingv1.Models.Request;
 
 namespace productstockingv1.Interfaces;
 
