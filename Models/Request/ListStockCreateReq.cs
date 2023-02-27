@@ -10,6 +10,11 @@ public class ListStockUpdateReq
     public IEnumerable<StockUpdateReq> command { get; set; }
 }
 
+public class ListStockTransferReq
+{
+    public IEnumerable<StockTransferReq> commands { get; set; }
+}
+
 public class ListCodeProduct
 {
     public IEnumerable<string>? productcodes { get; set; }

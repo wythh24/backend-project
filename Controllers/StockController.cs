@@ -302,9 +302,10 @@ namespace productstockingv1.Controllers
             {
                 foreach (var item in req.productcodes)
                 {
-                    var p = await _context.getRepository<Product, string>().GetAsync(item);
-                    if (p != null) {ProductList.Add(p);}
-                    else ProductList = null;
+                    // var p = await _context.getRepository<Product, string>().GetAsync(item);
+                    // if (p != null) {ProductList.Add(p);}
+                    // else ProductList = null;
+                    var s = _context.getRepository<Product, string>().GetAllQueryable().ToList();
                 }
             }
             else ProductList = null;
@@ -320,7 +321,7 @@ namespace productstockingv1.Controllers
                         price=e.Price,
                         description=e.Description,
                         OnHands=map.Sum(s=> s.Quantity)
-                    }).ToList()
+                    }).Where(e=> e.Code==req.productcodes.ToString()).ToList()
                     , false, 404, false, null)
                 : ExtenFunction.StockingResponse("Stocking", 
                     ProductList.Select(e=> new
@@ -497,8 +498,8 @@ namespace productstockingv1.Controllers
                 {
                     if (pro != null && wa != null)
                     {
-                        result = req.command.Where(e => e.Code == pro.Code && e.WareCode == wa.Code)
-                            .Select(e => _mapper.Map<Stocking>(e)).ToList();
+                        result = req.command
+                            .Select(e => _mapper.Map<Stocking>(e.Quantity)).ToList();
                     }
                     else return Ok("Fail");
                 }
@@ -530,13 +531,14 @@ namespace productstockingv1.Controllers
                 return BadRequest("Not found Request");
 
             var StockList = new List<Stocking>();
-            
+
             if (req.command.Any())
             {
                 foreach (var item in req.command)
                 {
                     var stock = await _context.getRepository<Stocking, string>().GetAsync(item.Id);
-                    StockList.Add(stock);
+                    if (stock != null) StockList.Add(stock);
+                    else StockList = null;
                 }
             }
 
@@ -548,11 +550,11 @@ namespace productstockingv1.Controllers
 
             if (StockList.Count > 0)
             {
-                foreach (var Stock in StockList)
+                foreach (var stock in StockList)
                 {
-                    foreach (var stReq in StockReq.Where(stReq => Stock.Id == stReq.Id))
+                    foreach (var stReq in StockReq.Where(stReq => stock.Id == stReq.Id))
                     {
-                        Stock.Quantity = stReq.Quantity;
+                        stock.Quantity = stReq.Quantity;
                     }
                 }
             }
@@ -563,15 +565,25 @@ namespace productstockingv1.Controllers
             {
                 await _context.getRepository<Stocking, string>().UpdateBatchAsync(StockList);
                 _context.Commit();
-                return Ok($"Product update {StockList.Count}");
+                return Ok(ExtenFunction.ResponseDefault("Stocking",StockList));
             }
             catch (Exception)
             {
                 _context.RollBack();
-                return BadRequest("Update Product was false");
+                return BadRequest(ExtenFunction.ResponseDefault("Stocking",StockList,false,404));
             }
         }
 
+        // [HttpPut("transfer")]
+        // public async Task<ActionResult> Transfer(ListStockTransferReq req)
+        // {
+        //     var StockList = new List<Stocking>();
+        //     if (!req.commands.Any())
+        //     {
+        //         return BadRequest();
+        //     }
+        //     
+        // }
 
         [HttpDelete]
         public async Task<ActionResult> DeleteStock(IdReq id)

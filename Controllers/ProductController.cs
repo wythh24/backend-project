@@ -144,7 +144,7 @@ namespace productstockingv1.Controllers
                 return Ok(new
                 {
                     success = true,
-                    statusCode = 200,
+                    statusCode = 201,
                     message = $"Successfully created {productList.Count} products",
                     data = productList.Select(e => e.Id).ToList()
                 });
@@ -222,7 +222,7 @@ namespace productstockingv1.Controllers
                     foreach (var proReq in ProductReq.Where(proReq => product.Id == proReq.Id))
                     {
                         product.Name = proReq.Name;
-                        product.Price = (decimal) proReq.Price;
+                        product.Price = (decimal)proReq.Price;
                     }
                 }
             }

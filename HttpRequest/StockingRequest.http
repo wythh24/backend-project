@@ -68,3 +68,16 @@ Content-Type: application/json
     "P-0001"
   ]
 }
+
+###(completed) Updated
+PUT https://localhost:7170/api/Stock
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "id" : "2D103841-9BF0-49E6-AEB1-DDA8A225824C",
+      "quantity": 800
+    }
+  ]
+}
