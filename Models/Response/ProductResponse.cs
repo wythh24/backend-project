@@ -1,4 +1,4 @@
-﻿using System;
+﻿namespace productstockingv1.models;
 
 public class ProductResponse
 {
@@ -7,4 +7,5 @@ public class ProductResponse
     public string Name { get; set; }
     public decimal Price { get; set; }
     public string Description { get; set; }
+
 }

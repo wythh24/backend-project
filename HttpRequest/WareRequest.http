@@ -1,0 +1,17 @@
+### get all or specific ware
+GET https://localhost:7170/api/Ware/GetAll
+Content-Type: application/json
+
+{
+  "id": null
+}
+
+###(completed) get all post
+POST https://localhost:7170/api/Ware/getAll
+Content-Type: application/json
+
+{
+  
+}
+
+
