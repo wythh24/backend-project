@@ -8,7 +8,18 @@ public class StockCreateRequest
     public DateTimeOffset? postionDate { get; set; }
 }
 
+public class Create
+{
+    public string Code { get; set; }
+    public string WareCode { get; set; }
+    public int? Quantity { get; set; }
+}
 public class StockGetById
 {
     public string Id { get; set; } = "";
+}
+
+public class ProductGetCode
+{
+    public string Code { get; set; } = "";
 }

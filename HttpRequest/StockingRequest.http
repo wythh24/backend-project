@@ -24,12 +24,47 @@ Content-Type: application/json
   "id": "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
 }
 
-### (On Develop) Get By ProductId
+### (completed) Get By ProductId
 GET https://localhost:7170/api/Stock/GetByProduct
 Content-Type: application/json
 
 {
   "ProductId": [
     "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+  ]
+}
+
+###(completed) Post By ProductId
+POST https://localhost:7170/api/Stock/GetByProduct
+Content-Type: application/json
+
+{
+  "ProductId": [
+    "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+  ]
+}
+
+###(On Developed) get list create
+POST https://localhost:7170/api/Stock/Create
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "Code": "P-0001",
+      "WareCode": "A-0001",
+      "Quantity": 500
+    }
+  ]
+}
+
+
+###(On Developed) get by Productcode
+POST https://localhost:7170/api/Stock/GetByProductCodes
+Content-Type: application/json
+
+{
+  "productcodes": [
+    "P-0001"
   ]
 }

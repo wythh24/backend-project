@@ -188,11 +188,6 @@ namespace productstockingv1.Controllers
                 : ExtenFunction.StockingResponse("Stocking", StockList, false, 302, true, req.Id)
             );
         }
-
-        
-        
-        
-        
         
         [HttpGet("GetByProduct")]
         public async Task<ActionResult> GetByProduct(ListStockCreateReq req)
@@ -202,10 +197,6 @@ namespace productstockingv1.Controllers
             var Stock = new List<Stocking>();
             var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
             var map = _mapper.Map<List<StockResponse>>(table);
-            // map.Select(e => new
-            // {
-            //     OnHands = Quantity + e.Quantity,
-            // }).ToList();
             if (req.ProductId != null)
             {
                 foreach (var item in req.ProductId)
@@ -225,8 +216,8 @@ namespace productstockingv1.Controllers
                         Code=e.Code,
                         name=e.Name,
                         price=e.Price,
-                        //Stocking=e.Stockings,
                         description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
                     }).ToList()
                     , false, 404, false, null)
                 : ExtenFunction.StockingResponse("Stocking", 
@@ -238,16 +229,299 @@ namespace productstockingv1.Controllers
                         price=e.Price,
                         Stocking=e.Stockings.Select(s=> new
                         {
-                            Quantity=s.Quantity
+                            Quantity=s.Quantity,
+                            DocumentData=s.DocumentDate,
+                            PostingDate=s.PostingDate
                         }),
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity),
                         description=e.Description,
                     }).ToList()
                     , false, 302, true, null)
             );
         }
+        [HttpPost("GetByProduct")]
+        public async Task<ActionResult> GetPostProduct(ListStockCreateReq req)
+        {
+            decimal Quantity = 0;
+            var ProductList = new List<Product>();
+            var Stock = new List<Stocking>();
+            var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(table);
+            if (req.ProductId != null)
+            {
+                foreach (var item in req.ProductId)
+                {
+                    var p = await _context.getRepository<Product, string>().GetAsyncd(item);
+                    if (p != null) {ProductList.Add(p);}
+                    else ProductList = null;
+                }
+            }
+            else ProductList = null;
 
+            return Ok(ProductList == null
+                ? ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
+                    }).ToList()
+                    , false, 404, false, null)
+                : ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        Stocking=e.Stockings.Select(s=> new
+                        {
+                            Quantity=s.Quantity,
+                            DocumentData=s.DocumentDate,
+                            PostingDate=s.PostingDate
+                        }),
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity),
+                        description=e.Description,
+                    }).ToList()
+                    , false, 302, true, null)
+            );
+        }
+        
+        [HttpPost("GetByProductCodes")]
+        public async Task<ActionResult> GetCodeProduct(ListCodeProduct req)
+        {
+            decimal Quantity = 0;
+            var ProductList = new List<Product>();
+            var Stock = new List<Stocking>();
+            var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(table);
+            if (req.productcodes != null)
+            {
+                foreach (var item in req.productcodes)
+                {
+                    var p = await _context.getRepository<Product, string>().GetAsync(item);
+                    if (p != null) {ProductList.Add(p);}
+                    else ProductList = null;
+                }
+            }
+            else ProductList = null;
+            
+
+            return Ok(ProductList == null
+                ? ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
+                    }).ToList()
+                    , false, 404, false, null)
+                : ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        Stocking=e.Stockings.Select(s=> new
+                        {
+                            Quantity=s.Quantity,
+                            DocumentData=s.DocumentDate,
+                            PostingDate=s.PostingDate
+                        }),
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity),
+                        description=e.Description,
+                    }).Where(e=> e.Code==req.productcodes.ToString()).ToList()
+                    , false, 302, true, null)
+            );
+        }
         
         
+        
+        
+        
+        [HttpGet("GetByWare")]
+        public async Task<ActionResult> GetByWare(ListWareGet req)
+        {
+            decimal Quantity = 0;
+            // var ProductList = new List<Product>();
+            var WareList = new List<Ware>();
+            var Stock = new List<Stocking>();
+            var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(table);
+            if (req.wareId != null)
+            {
+                foreach (var item in req.wareId)
+                {
+                    var w = await _context.getRepository<Ware, string>().GetAsyncd(item);
+                    if (w != null) {WareList.Add(w);}
+                    else WareList = null;
+                }
+            }
+            else WareList = null;
+
+            return Ok(WareList == null
+                ? ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
+                        {
+                            Id=s.Id,
+                            //notyet
+                            product=s.product,
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
+                        }).ToList(),
+                        name=e.Name,
+                        description=e.Description
+                    }).ToList()
+                    , false, 404, false, null)
+                : ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
+                        {
+                            Id=s.Id,
+                            //notyet
+                            product=s.product,
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
+                        }).ToList(),
+                        name=e.Name,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
+                    }).ToList()
+                    , false, 302, true, null)
+            );
+        }
+        
+        
+        
+        [HttpPost("GetByWare")]
+        public async Task<ActionResult> GetPostProduct(ListWareGet req)
+        {
+            decimal Quantity = 0;
+            // var ProductList = new List<Product>();
+            var WareList = new List<Ware>();
+            var Stock = new List<Stocking>();
+            var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(table);
+            if (req.wareId != null)
+            {
+                foreach (var item in req.wareId)
+                {
+                    var w = await _context.getRepository<Ware, string>().GetAsyncd(item);
+                    if (w != null) {WareList.Add(w);}
+                    else WareList = null;
+                }
+            }
+            else WareList = null;
+
+            return Ok(WareList == null
+                ? ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
+                        {
+                            Id=s.Id,
+                            //notyet
+                            product=s.product,
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
+                        }).ToList(),
+                        name=e.Name,
+                        description=e.Description
+                    }).ToList()
+                    , false, 404, false, null)
+                : ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
+                        {
+                            Id=s.Id,
+                            //notyet
+                            product=s.product,
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
+                        }).ToList(),
+                        name=e.Name,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
+                    }).ToList()
+                    , false, 302, true, null)
+            );
+        }
+
+        [HttpPost("Create")]
+        public async Task<ActionResult> Create(ListCreate req)
+        {
+            var product = new List<Product>();
+            var result = new List<Stocking>();
+            var ware = new List<Ware>();
+            //change to Any()
+            if (!req.command.Any()) return BadRequest("Request must be filled");
+
+            foreach (var wa in ware)
+            {
+                foreach (var pro in product)
+                {
+                    if (pro != null && wa != null)
+                    {
+                        result = req.command.Where(e => e.Code == pro.Code && e.WareCode == wa.Code)
+                            .Select(e => _mapper.Map<Stocking>(e)).ToList();
+                    }
+                    else return Ok("Fail");
+                }
+            }
+            _context.BeginTransaction();
+            try
+            {
+                await _context.getRepository<Stocking, string>().CreateBatchAsync(result);
+                _context.Commit();
+                return Ok(new
+                {
+                    success = true,
+                    statusCode = 200,
+                    message = $"Successfully created {result.Count} products",
+                    data = result.Select(e => e.Quantity).ToList()
+                });
+            }
+            catch (Exception)
+            {
+                _context.RollBack();
+                return Conflict("Something gone wrong!");
+            }
+        }
         
         [HttpPut]
         public async Task<ActionResult> UpdateProduct(ListStockUpdateReq req)
@@ -297,6 +571,7 @@ namespace productstockingv1.Controllers
                 return BadRequest("Update Product was false");
             }
         }
+
 
         [HttpDelete]
         public async Task<ActionResult> DeleteStock(IdReq id)
