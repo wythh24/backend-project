@@ -49,13 +49,13 @@ Content-Type: application/json
 {
   "command": [
     {
-      "id": "1111",
-      "name": "test 111",
+      "id": "1f9174c3-99e5-407f-b3b9-1e4b6599b121",
+      "name": "0000",
       "description": ""
     },
     {
-      "id": "2",
-      "name": "dkdk",
+      "id": "55bd64c9-080f-4721-8f22-e44cc7467336",
+      "name": "3333",
       "description": ""
     }
   ]

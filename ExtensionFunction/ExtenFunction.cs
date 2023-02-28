@@ -48,7 +48,6 @@ public static class ExtenFunction
             if (_data.Count is 0 or 1) _message = $"Successfully returned {_controller}";
         }
 
-
         return new
         {
             success = _success,

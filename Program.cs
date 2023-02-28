@@ -13,6 +13,11 @@ using productstockingv1.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Enable cors
+builder.Services.AddCors(options =>
+    options.AddPolicy("corsPolicy",
+        build => { build.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin(); }));
+
 //comment before modify
 builder.Services.AddDbContext<ProductContext>(
     options =>
@@ -46,6 +51,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("corsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

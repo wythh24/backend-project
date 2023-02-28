@@ -29,6 +29,7 @@ namespace productstockingv1.Controllers
         }
 
         // get product with post body (POST)
+        [EnableCors("corsPolicy")]
         [HttpPost("getAll")]
         public async Task<ActionResult> GetProduct(IdReq id = null)
         {
@@ -192,38 +193,28 @@ namespace productstockingv1.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateProduct(ListProductUpdateReq req)
         {
-            if (!req.command.Any())
-                return BadRequest("Not found Request");
+            if (!req.command.Any()) return BadRequest("Not found Request");
 
             var ProductList = new List<Product>();
 
-            if (req.command.Any())
-            {
-                foreach (var item in req.command)
-                {
-                    var product = await _context.getRepository<Product, string>().GetAsync(item.Id);
-                    ProductList.Add(product);
-                }
-            }
-
-            var ProductReq = new List<ProductUpdateReq>();
             foreach (var item in req.command)
             {
-                ProductReq.Add(item);
+                var product = await _context.getRepository<Product, string>().GetAsync(item.Id);
+                if (product != null) ProductList.Add(product);
             }
 
-            if (ProductList.Count > 0)
+            var ProductReq = req.command.ToList();
+
+            if (ProductList.Count != ProductReq.Count) return Ok($"Updated was false");
+
+            foreach (var product in ProductList)
             {
-                foreach (var product in ProductList)
+                foreach (var proReq in ProductReq.Where(proReq => product.Id == proReq.Id))
                 {
-                    foreach (var proReq in ProductReq.Where(proReq => product.Id == proReq.Id))
-                    {
-                        product.Name = proReq.Name;
-                        product.Price = (decimal) proReq.Price;
-                    }
+                    product.Name = proReq.Name;
+                    product.Price = (decimal) proReq.Price;
                 }
             }
-
 
             _context.BeginTransaction();
             try
@@ -235,7 +226,7 @@ namespace productstockingv1.Controllers
             catch (Exception)
             {
                 _context.RollBack();
-                return BadRequest("Update Product was false");
+                return BadRequest("Something gone wrong");
             }
         }
     }

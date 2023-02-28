@@ -166,7 +166,7 @@ Content-Type: application/json
     },
     {
       "name": "apple",
-      "price": "3.0",
+      "price": 3.0,
       "description": "product from usa",
       "code": "us-9000-1"
     }

@@ -86,3 +86,6 @@ Content-Type: application/json
     }
   ]
 }
+
+### test development domain
+GET http://localhost:5113/api/Product/111

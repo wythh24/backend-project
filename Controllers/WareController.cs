@@ -189,30 +189,16 @@ namespace productstockingv1.Controllers
 
             var WareList = new List<Ware>();
 
-            if (req.command.Any())
+            foreach (var item in req.command)
             {
-                foreach (var item in req.command)
-                {
-                    var ware = await _context.getRepository<Ware, string>().GetAsync(item.Id);
-                    if (ware != null) WareList.Add(ware);
-                }
+                var ware = await _context.getRepository<Ware, string>().GetAsync(item.Id);
+                if (ware != null) WareList.Add(ware);
             }
 
             var WareReq = req.command.ToList();
 
-            if (WareList.Count > 0)
-            {
-                foreach (var ware in WareList)
-                {
-                    foreach (var wreq in WareReq.Where(wreq => ware.Id == wreq.Id))
-                    {
-                        ware.Name = wreq.name;
-                        ware.Description = wreq.description;
-                    }
-                }
-            }
-
-            if (WareList.Count < WareReq.Count)
+            // check count of ware updated
+            if (WareList.Count != WareReq.Count)
                 return BadRequest(ExtenFunction.ResponseDefault<WareUpdateReq>(
                     "Ware",
                     null,
@@ -221,6 +207,18 @@ namespace productstockingv1.Controllers
                     true,
                     $"No wares updated"
                 ));
+
+            //change value update
+
+            foreach (var ware in WareList)
+            {
+                foreach (var wreq in WareReq.Where(wreq => ware.Id == wreq.Id))
+                {
+                    ware.Name = wreq.name;
+                    ware.Description = wreq.description;
+                }
+            }
+
 
             _context.BeginTransaction();
             try
