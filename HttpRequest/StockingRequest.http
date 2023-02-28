@@ -44,22 +44,33 @@ Content-Type: application/json
   ]
 }
 
+
 ###(On Developed) get list create
 POST https://localhost:7170/api/Stock/Create
 Content-Type: application/json
 
 {
   "command": [
-    {
-      "Code": "P-0001",
-      "WareCode": "A-0001",
-      "Quantity": 500
-    }
+      {
+        "Code": "P-0001",
+        "WareCode": "A-0001",
+        "Quantity": 500
+      }
+  ]
+  
+}
+
+###(passed) get by Productcode(get)
+GET https://localhost:7170/api/Stock/GetByProductCodes
+Content-Type: application/json
+
+{
+  "Productcodes": [
+    "P-0001"
   ]
 }
 
-
-###(On Developed) get by Productcode
+###(passed) get by Productcode
 POST https://localhost:7170/api/Stock/GetByProductCodes
 Content-Type: application/json
 
@@ -68,6 +79,8 @@ Content-Type: application/json
     "P-0001"
   ]
 }
+
+
 
 ###(completed) Updated
 PUT https://localhost:7170/api/Stock

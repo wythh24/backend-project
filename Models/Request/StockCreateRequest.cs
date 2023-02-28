@@ -10,7 +10,7 @@ public class StockCreateRequest
 
 public class Create
 {
-    public string Code { get; set; }
+    public string ProductCode { get; set; }
     public string WareCode { get; set; }
     public int? Quantity { get; set; }
 }

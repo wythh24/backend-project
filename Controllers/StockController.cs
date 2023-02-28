@@ -28,7 +28,7 @@ namespace productstockingv1.Controllers
         [HttpGet("Getall")]
         public async Task<ActionResult<IEnumerable<Stocking>>> Get(IdReq id)
         {
-            var stockList = new List<Stocking>();
+            var StockList = new List<Stocking>();
             var StockResponse = new List<StockResponse>();
             var pro_table = _context.getRepository<Product, string>().GetAllQueryable().ToList();
             var resultproduct = _mapper.Map<List<ProductResponse>>(pro_table);
@@ -39,23 +39,34 @@ namespace productstockingv1.Controllers
                 foreach (var item in id.Id)
                 {
                     var st = await _context.getRepository<Stocking, string>().GetAsync(item);
-                    if (st != null) stockList.Add(st);
+                    if (st != null) StockList.Add(st);
                 }
-
+                
                 return Ok(ExtenFunction.ResponseDefault("Stocking",
-                    stockList.Select(e =>
+                    StockList.Select(e => new
                     {
-                        return new
+                        Id = e.Id,
+                        Product=new
                         {
-                            Id = e.Id,
-                            Product = resultproduct.Where(n => n.Id == e.Id),
-                            Ware = resultWare.Where(n => n.Id == e.Id),
-                            ProductId = e.ProductId,
-                            WareId = e.WareId,
-                            Quantity = e.Quantity,
-                            DocumentDate = e.DocumentDate,
-                            PostingDate = e.PostingDate,
-                        };
+                            Id=e.product.Id,
+                            code=e.product.Code,
+                            name=e.product.Name,
+                            price=e.product.Price,
+                            description=e.product.Description
+                            
+                        },
+                        Ware=new
+                        {
+                            Id=e.Ware.Id,
+                            code=e.Ware.Code,
+                            name=e.Ware.Name,
+                            description=e.Ware.Description
+                        },
+                        Productid = e.ProductId,
+                        wareId = e.WareId,
+                        quantity = e.Quantity,
+                        documentDate = e.DocumentDate,
+                        postingDate = e.PostingDate,
                     }).ToList()
                     , true));
             }
@@ -68,11 +79,26 @@ namespace productstockingv1.Controllers
 
                 return Ok(ExtenFunction.ResponseDefault(
                     "Stocking",
+
                     result.Select(e => new
                     {
                         Id = e.Id,
-                        Product = resultproduct.Where(n => n.Id == e.Id),
-                        Ware = resultWare.Where(n => n.Id == e.Id),
+                        Product=new
+                        {
+                            Id=e.product.Id,
+                            code=e.product.Code,
+                            name=e.product.Name,
+                            price=e.product.Price,
+                            description=e.product.Description
+                            
+                        },
+                        Ware=new
+                        {
+                            Id=e.Ware.Id,
+                            code=e.Ware.Code,
+                            name=e.Ware.Name,
+                            description=e.Ware.Description
+                        },
                         Productid = e.ProductId,
                         wareId = e.WareId,
                         quantity = e.Quantity,
@@ -82,6 +108,7 @@ namespace productstockingv1.Controllers
                     ,
                     false));
             }
+
         }
 
         [HttpPost]
@@ -104,19 +131,30 @@ namespace productstockingv1.Controllers
                 }
 
                 return Ok(ExtenFunction.ResponseDefault("Stocking",
-                    StockList.Select(e =>
+                    StockList.Select(e => new
                     {
-                        return new
+                        Id = e.Id,
+                        Product=new
                         {
-                            Id = e.Id,
-                            ProductId = e.ProductId,
-                            WareId = e.WareId,
-                            Quantity = e.Quantity,
-                            DocumentDate = e.DocumentDate,
-                            PostingDate = e.PostingDate,
-                            Product = resultperson.Where(n => n.Id == e.Id),
-                            Ware = resultWare.Where(n => n.Id == e.Id)
-                        };
+                            Id=e.product.Id,
+                            code=e.product.Code,
+                            name=e.product.Name,
+                            price=e.product.Price,
+                            description=e.product.Description
+                            
+                        },
+                        Ware=new
+                        {
+                            Id=e.Ware.Id,
+                            code=e.Ware.Code,
+                            name=e.Ware.Name,
+                            description=e.Ware.Description
+                        },
+                        Productid = e.ProductId,
+                        wareId = e.WareId,
+                        quantity = e.Quantity,
+                        documentDate = e.DocumentDate,
+                        postingDate = e.PostingDate,
                     }).ToList()
                     , true));
             }
@@ -127,15 +165,33 @@ namespace productstockingv1.Controllers
                     .ToList();
 
                 var result = _mapper.Map<List<StockResponse>>(all);
-
-
+                
+                
+                
+                
+                
                 return Ok(ExtenFunction.ResponseDefault(
                     "Stocking",
+
                     result.Select(e => new
                     {
                         Id = e.Id,
-                        product = resultperson.Where(n => n.Id == e.ProductId),
-                        ware = resultWare.Where(n => n.Id == e.Id),
+                        Product=new
+                        {
+                            Id=e.product.Id,
+                            code=e.product.Code,
+                            name=e.product.Name,
+                            price=e.product.Price,
+                            description=e.product.Description
+                            
+                        },
+                        Ware=new
+                        {
+                            Id=e.Ware.Id,
+                            code=e.Ware.Code,
+                            name=e.Ware.Name,
+                            description=e.Ware.Description
+                        },
                         Productid = e.ProductId,
                         wareId = e.WareId,
                         quantity = e.Quantity,
@@ -182,67 +238,76 @@ namespace productstockingv1.Controllers
                 : ExtenFunction.StockingResponse("Stocking", StockList, false, 302, true, req.Id)
             );
         }
-
+        
         [HttpGet("GetByProduct")]
         public async Task<ActionResult> GetByProduct(ListStockCreateReq req)
         {
             decimal Quantity = 0;
             var ProductList = new List<Product>();
             var Stock = new List<Stocking>();
+            Stock = null;
             var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
             var map = _mapper.Map<List<StockResponse>>(table);
             if (req.ProductId != null)
             {
                 foreach (var item in req.ProductId)
                 {
-                    var p = await _context.getRepository<Product, string>().GetAsyncd(item);
-                    if (p != null)
+                    // var p = await _context.getRepository<Product, string>().GetAsyncd(item);
+                    var pro = _context.getRepository<Product, string>().GetAllQueryable().ToList()
+                        .Where(e => e.Id == item);
+                    if (pro != null)
                     {
-                        ProductList.Add(p);
+                        foreach (var p in pro)
+                        {
+                            var st = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                                .Where(e => e.ProductId == p.Id);
+                            if (st != null)
+                            {
+                                return Ok(ExtenFunction.StockingResponse("Stocking", 
+                                        st.Select(e => new
+                                        {
+                                            product = new
+                                            {
+                                                Id = e.product.Id,
+                                                code = e.product.Code,
+                                                stockings = Stock,
+                                                name = e.product.Name,
+                                                price = e.product.Price,
+                                                description = e.product.Description,
+                                            },
+                                            OnHands = map.Where(s => s.ProductId == p.Id).Sum(s => s.Quantity)
+                                        }).ToList()
+                                    , false, 302, true, null)
+                                );
+                            }
+                            else ProductList = null;
+                        }
                     }
                     else ProductList = null;
                 }
             }
             else ProductList = null;
 
-            return Ok(ProductList == null
-                ? ExtenFunction.StockingResponse("Stocking",
-                    ProductList.Select(e => new
+            return Ok(ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        name = e.Name,
-                        price = e.Price,
-                        description = e.Description,
-                        OnHands = map.Sum(s => s.Quantity)
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        description=e.Description,
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity)
                     }).ToList()
                     , false, 404, false, null)
-                : ExtenFunction.StockingResponse("Stocking",
-                    ProductList.Select(e => new
-                    {
-                        Id = e.Id,
-                        Code = e.Code,
-                        name = e.Name,
-                        price = e.Price,
-                        Stocking = e.Stockings.Select(s => new
-                        {
-                            Quantity = s.Quantity,
-                            DocumentData = s.DocumentDate,
-                            PostingDate = s.PostingDate
-                        }),
-                        OnHands = map.Where(s => s.ProductId == e.Id).Sum(s => s.Quantity),
-                        description = e.Description,
-                    }).ToList()
-                    , false, 302, true, null)
             );
         }
-
         [HttpPost("GetByProduct")]
         public async Task<ActionResult> GetPostProduct(ListStockCreateReq req)
         {
             decimal Quantity = 0;
             var ProductList = new List<Product>();
             var Stock = new List<Stocking>();
+            Stock = null;
             var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
             var map = _mapper.Map<List<StockResponse>>(table);
             if (req.ProductId != null)
@@ -250,99 +315,174 @@ namespace productstockingv1.Controllers
                 foreach (var item in req.ProductId)
                 {
                     var p = await _context.getRepository<Product, string>().GetAsyncd(item);
-                    if (p != null)
-                    {
-                        ProductList.Add(p);
-                    }
+                    if (p != null) {ProductList.Add(p);}
                     else ProductList = null;
                 }
             }
             else ProductList = null;
 
             return Ok(ProductList == null
-                ? ExtenFunction.StockingResponse("Stocking",
-                    ProductList.Select(e => new
+                ? ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        name = e.Name,
-                        price = e.Price,
-                        description = e.Description,
-                        OnHands = map.Sum(s => s.Quantity)
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
                     }).ToList()
                     , false, 404, false, null)
-                : ExtenFunction.StockingResponse("Stocking",
-                    ProductList.Select(e => new
+                : ExtenFunction.StockingResponse("Stocking", 
+                    ProductList.Select(e=> new
                     {
-                        id = e.Id,
-                        Code = e.Code,
-                        name = e.Name,
-                        price = e.Price,
-                        Stocking = e.Stockings.Select(s => new
-                        {
-                            Quantity = s.Quantity,
-                            DocumentData = s.DocumentDate,
-                            PostingDate = s.PostingDate
-                        }),
-                        OnHands = map.Where(s => s.ProductId == e.Id).Sum(s => s.Quantity),
-                        description = e.Description,
+                        Id=e.Id,
+                        Code=e.Code,
+                        name=e.Name,
+                        price=e.Price,
+                        Stocking=Stock,
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity),
+                        description=e.Description,
                     }).ToList()
                     , false, 302, true, null)
             );
         }
+        [HttpGet("GetByProductCodes")]
+        public async Task<ActionResult> GetCodeGet(ListCodeProduct req)
+        {
+            decimal Quantity = 0;
+            var ProductList = new List<Product>();
+            var Stock = new List<Stocking>();
+            Stock = null;
+            var st = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(st);
+            if (req.productcodes != null)
+            {
+                foreach (var item in req.productcodes)
+                {
+                    var pro = _context.getRepository<Product, string>().GetAllQueryable().ToList()
+                        .Where(e => e.Code == item);
+                    if (pro != null)
+                    {
+                        foreach (var p in pro)
+                        {
+                            var s = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                                .Where(e => e.ProductId == p.Id);
+                            if (s != null)
+                            {
+                                return Ok(ExtenFunction.StockingResponse("stocking(s)"
+                                        , s.Select(e => new
+                                        {
+                                            product=new
+                                            {
+                                                Id=e.product.Id,
+                                                code=e.product.Code,
+                                                stocking=Stock,
+                                                price=e.product.Price,
+                                                description=e.product.Description,
+                                            },
+                                            OnHands=map.Where(e=>e.ProductId==p.Id).Sum(k=>k.Quantity),
+                                        }).ToList(), true, 200, true
+                                    )
+                                );
+                            }
 
+                            else ProductList = null;
+                        }
+                    }
+                    ProductList = null;
+                }
+            }
+            else ProductList = null;
+
+            return Ok((new
+                {
+                    success=true,
+                    StatusCode=StatusCode(200),
+                    message=$"Success returned {ProductList.Count} stocking",
+                    data=ProductList.Select(e => new
+                    {
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=Stock,
+                        Name=e.Name,
+                        price=e.Price,
+                        description=e.Description,
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity),
+                    }
+                    ).ToList(),
+                })
+            );
+        }
         [HttpPost("GetByProductCodes")]
         public async Task<ActionResult> GetCodeProduct(ListCodeProduct req)
         {
             decimal Quantity = 0;
             var ProductList = new List<Product>();
             var Stock = new List<Stocking>();
-            var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
-            var map = _mapper.Map<List<StockResponse>>(table);
+            Stock = null;
+            var st = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(st);
             if (req.productcodes != null)
             {
                 foreach (var item in req.productcodes)
                 {
-                    // var p = await _context.getRepository<Product, string>().GetAsync(item);
-                    // if (p != null) {ProductList.Add(p);}
-                    // else ProductList = null;
-                    var s = _context.getRepository<Product, string>().GetAllQueryable().ToList();
+                    var pro = _context.getRepository<Product, string>().GetAllQueryable().ToList()
+                        .Where(e => e.Code == item);
+                    if (pro != null)
+                    {
+                        foreach (var p in pro)
+                        {
+                            var s = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                                .Where(e => e.ProductId == p.Id);
+                            if (s != null)
+                            {
+                                return Ok(ExtenFunction.StockingResponse("stocking(s)"
+                                        , s.Select(e => new
+                                        {
+                                            product=new
+                                            {
+                                                Id=e.product.Id,
+                                                code=e.product.Code,
+                                                stocking=Stock,
+                                                price=e.product.Price,
+                                                description=e.product.Description,
+                                            },
+                                            OnHands=map.Where(e=>e.ProductId==p.Id).Sum(k=>k.Quantity),
+                                        }).ToList(), true, 200, true
+                                    )
+                                );
+                            }
+
+                            else ProductList = null;
+                        }
+                    }
+                    ProductList = null;
                 }
             }
             else ProductList = null;
 
-
-            return Ok(ProductList == null
-                ? ExtenFunction.StockingResponse("Stocking",
-                    ProductList.Select(e => new
+            return Ok((new
+                {
+                    success=true,
+                    StatusCode=StatusCode(200),
+                    message=$"Success returned {ProductList.Count} stocking",
+                    data=ProductList.Select(e => new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        name = e.Name,
-                        price = e.Price,
-                        description = e.Description,
-                        OnHands = map.Sum(s => s.Quantity)
-                    }).Where(e => e.Code == req.productcodes.ToString()).ToList()
-                    , false, 404, false, null)
-                : ExtenFunction.StockingResponse("Stocking",
-                    ProductList.Select(e => new
-                    {
-                        Id = e.Id,
-                        Code = e.Code,
-                        name = e.Name,
-                        price = e.Price,
-                        Stocking = e.Stockings.Select(s => new
-                        {
-                            Quantity = s.Quantity,
-                            DocumentData = s.DocumentDate,
-                            PostingDate = s.PostingDate
-                        }),
-                        OnHands = map.Where(s => s.ProductId == e.Id).Sum(s => s.Quantity),
-                        description = e.Description,
-                    }).Where(e => e.Code == req.productcodes.ToString()).ToList()
-                    , false, 302, true, null)
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=Stock,
+                        Name=e.Name,
+                        price=e.Price,
+                        description=e.Description,
+                        OnHands=map.Where(s=> s.ProductId==e.Id).Sum(s=> s.Quantity),
+                    }
+                    ).ToList(),
+                })
             );
         }
+        
+
 
 
         [HttpGet("GetByWare")]
@@ -352,6 +492,7 @@ namespace productstockingv1.Controllers
             // var ProductList = new List<Product>();
             var WareList = new List<Ware>();
             var Stock = new List<Stocking>();
+            Stock = null;
             var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
             var map = _mapper.Map<List<StockResponse>>(table);
             if (req.wareId != null)
@@ -359,63 +500,75 @@ namespace productstockingv1.Controllers
                 foreach (var item in req.wareId)
                 {
                     var w = await _context.getRepository<Ware, string>().GetAsyncd(item);
-                    if (w != null)
-                    {
-                        WareList.Add(w);
-                    }
+                    if (w != null) {WareList.Add(w);}
                     else WareList = null;
                 }
             }
             else WareList = null;
 
             return Ok(WareList == null
-                ? ExtenFunction.StockingResponse("Ware",
-                    WareList.Select(e => new
+                ? ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        Stock = e.Stockings.Select(s => new
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
                         {
-                            Id = s.Id,
-                            //notyet
-                            product = s.product,
-                            Ware = s.Ware,
-                            productid = s.ProductId,
-                            wareId = s.WareId,
-                            Quantity = s.Quantity,
-                            documentDate = s.DocumentDate,
-                            postingDate = s.PostingDate
+                            Id=s.Id,
+                            product=new
+                            {
+                                Id=s.product.Id,
+                                code=s.product.Code,
+                                stocking=Stock,
+                                name=s.product.Name,
+                                price=s.product.Price,
+                                description=s.product.Description,
+                            },
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
                         }).ToList(),
-                        name = e.Name,
-                        description = e.Description
+                        name=e.Name,
+                        description=e.Description
                     }).ToList()
                     , false, 404, false, null)
-                : ExtenFunction.StockingResponse("Ware",
-                    WareList.Select(e => new
+                : ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        Stock = e.Stockings.Select(s => new
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
                         {
-                            Id = s.Id,
-                            //notyet
-                            product = s.product,
-                            Ware = s.Ware,
-                            productid = s.ProductId,
-                            wareId = s.WareId,
-                            Quantity = s.Quantity,
-                            documentDate = s.DocumentDate,
-                            postingDate = s.PostingDate
+                            Id=s.Id,
+                            product=new
+                            {
+                                Id=s.product.Id,
+                                code=s.product.Code,
+                                stocking=Stock,
+                                name=s.product.Name,
+                                price=s.product.Price,
+                                description=s.product.Description,
+                            },
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
                         }).ToList(),
-                        name = e.Name,
-                        description = e.Description,
-                        OnHands = map.Sum(s => s.Quantity)
+                        name=e.Name,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
                     }).ToList()
                     , false, 302, true, null)
             );
         }
-
-
+        
+        
+        
         [HttpPost("GetByWare")]
         public async Task<ActionResult> GetPostProduct(ListWareGet req)
         {
@@ -430,96 +583,100 @@ namespace productstockingv1.Controllers
                 foreach (var item in req.wareId)
                 {
                     var w = await _context.getRepository<Ware, string>().GetAsyncd(item);
-                    if (w != null)
-                    {
-                        WareList.Add(w);
-                    }
+                    if (w != null) {WareList.Add(w);}
                     else WareList = null;
                 }
             }
             else WareList = null;
 
             return Ok(WareList == null
-                ? ExtenFunction.StockingResponse("Ware",
-                    WareList.Select(e => new
+                ? ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        Stock = e.Stockings.Select(s => new
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
                         {
-                            Id = s.Id,
-                            //notyet
-                            product = s.product,
-                            Ware = s.Ware,
-                            productid = s.ProductId,
-                            wareId = s.WareId,
-                            Quantity = s.Quantity,
-                            documentDate = s.DocumentDate,
-                            postingDate = s.PostingDate
+                            Id=s.Id,
+                            pproduct=new
+                            {
+                                Id=s.product.Id,
+                                code=s.product.Code,
+                                stocking=Stock,
+                                name=s.product.Name,
+                                price=s.product.Price,
+                                description=s.product.Description,
+                            },
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
                         }).ToList(),
-                        name = e.Name,
-                        description = e.Description
+                        name=e.Name,
+                        description=e.Description
                     }).ToList()
                     , false, 404, false, null)
-                : ExtenFunction.StockingResponse("Ware",
-                    WareList.Select(e => new
+                : ExtenFunction.StockingResponse("Ware", 
+                    WareList.Select(e=> new
                     {
-                        Id = e.Id,
-                        Code = e.Code,
-                        Stock = e.Stockings.Select(s => new
+                        Id=e.Id,
+                        Code=e.Code,
+                        Stock=e.Stockings.Select(s=> new
                         {
-                            Id = s.Id,
-                            //notyet
-                            product = s.product,
-                            Ware = s.Ware,
-                            productid = s.ProductId,
-                            wareId = s.WareId,
-                            Quantity = s.Quantity,
-                            documentDate = s.DocumentDate,
-                            postingDate = s.PostingDate
+                            Id=s.Id,
+                            product=new
+                            {
+                                Id=s.product.Id,
+                                code=s.product.Code,
+                                stocking=Stock,
+                                name=s.product.Name,
+                                price=s.product.Price,
+                                description=s.product.Description,
+                            },
+                            Ware=s.Ware,
+                            productid=s.ProductId,
+                            wareId=s.WareId,
+                            Quantity=s.Quantity,
+                            documentDate=s.DocumentDate,
+                            postingDate=s.PostingDate
                         }).ToList(),
-                        name = e.Name,
-                        description = e.Description,
-                        OnHands = map.Sum(s => s.Quantity)
+                        name=e.Name,
+                        description=e.Description,
+                        OnHands=map.Sum(s=> s.Quantity)
                     }).ToList()
                     , false, 302, true, null)
             );
         }
-
+        //fixme
         [HttpPost("Create")]
-        public async Task<ActionResult> CreateExistProduct(ListCreate req)
+        public async Task<ActionResult<List<Stocking>>> Create(ListCreate req)
         {
-            var product = new List<Product>();
-            var result = new List<Stocking>();
-            var ware = new List<Ware>();
-            //change to Any()
-            if (!req.command.Any()) return BadRequest("Request must be filled");
+            if (!req.command.Any()) return BadRequest();
 
-            foreach (var wa in ware)
+            var stockList = new List<Stocking>();
+            
+            foreach (var ree in req.command)
             {
-                foreach (var pro in product)
-                {
-                    if (pro != null && wa != null)
-                    {
-                        result = req.command
-                            .Select(e => _mapper.Map<Stocking>(e.Quantity)).ToList();
-                    }
-                    else return Ok("Fail");
-                }
-            }
+                var ware = _context.getRepository<Ware, string>().GetAllQueryable().ToList()
+                    .Where(e => e.Code == ree.WareCode);
+                
+                var product = _context.getRepository<Product, string>().GetAllQueryable().ToList()
+                    .Where(e => e.Code == ree.ProductCode);
 
+                if (ware.Any() && product.Any())
+                {
+                }
+
+            }
+       
             _context.BeginTransaction();
             try
             {
-                await _context.getRepository<Stocking, string>().CreateBatchAsync(result);
+                // await _context.getRepository<Product, string>().CreateBatchAsync(StockList);
                 _context.Commit();
-                return Ok(new
-                {
-                    success = true,
-                    statusCode = 200,
-                    message = $"Successfully created {result.Count} products",
-                    data = result.Select(e => e.Quantity).ToList()
-                });
+                return Ok("in try");
             }
             catch (Exception)
             {
@@ -527,7 +684,7 @@ namespace productstockingv1.Controllers
                 return Conflict("Something gone wrong!");
             }
         }
-
+        
         [HttpPut]
         public async Task<ActionResult> UpdateProduct(ListStockUpdateReq req)
         {
@@ -569,39 +726,30 @@ namespace productstockingv1.Controllers
             {
                 await _context.getRepository<Stocking, string>().UpdateBatchAsync(StockList);
                 _context.Commit();
-                return Ok(ExtenFunction.ResponseDefault("Stocking", StockList));
+                return Ok(ExtenFunction.ResponseDefault("Stocking",StockList));
             }
             catch (Exception)
             {
                 _context.RollBack();
-                return BadRequest(ExtenFunction.ResponseDefault("Stocking", StockList, false, 404));
+                return BadRequest(ExtenFunction.ResponseDefault("Stocking",StockList,false,404));
             }
         }
-
-        // [HttpPut("transfer")]
-        // public async Task<ActionResult> Transfer(ListStockTransferReq req)
-        // {
-        //     var StockList = new List<Stocking>();
-        //     if (!req.commands.Any())
-        //     {
-        //         return BadRequest();
-        //     }
-        //     
-        // }
-
+        
+        
+        
         [HttpDelete]
         public async Task<ActionResult> DeleteStock(IdReq id)
         {
             var StockList = new List<Stocking>();
-            if (id == null)
-                return BadRequest(new
-                {
-                    succes = false,
-                    StatusCode = 400,
-                    message = "No giving Ids to delete stocking",
-                    data = StockList = null,
-                });
+            if (id == null) return BadRequest(new
+            {
+                succes=false,
+                StatusCode=400,
+                message="No giving Ids to delete stocking",
+                data=StockList=null,
+            });
 
+            
 
             if (id != null)
             {

@@ -42,13 +42,8 @@ public class StockProfile : Profile
                     )
             .ForMember(e=> e.DocumentDate,
                 Option=> 
-                    Option.MapFrom(e=> DateTime.Now))
-            .ForMember(e=> e.PostingDate,
-                Option=>
-                    Option.MapFrom(e=> DateTime.Now))
-            .ForMember(e=> e.Quantity,
-                Option=>
-                    Option.MapFrom(e=> e.Quantity))
+                    Option.MapFrom(e=> DateTime.Now)
+                    )
             ;
         
 
