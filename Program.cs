@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Org.BouncyCastle.Crypto.Tls;
 using productstockingv1.Data;
 using productstockingv1.models;
 using productstockingv1.Interfaces;
@@ -29,9 +30,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
 builder.Services.AddScoped<IRepository<Ware, string>, WareRepository>();
 builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
-// builder.Services.AddControllers()
-//     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();
 
