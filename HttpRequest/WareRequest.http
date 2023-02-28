@@ -30,14 +30,14 @@ Content-Type: application/json
 {
   "command": [
     {
-      "name": "create test",
+      "name": "1",
       "description": "test dest",
-      "code": "1f1d11"
+      "code": "khmer2"
     },
     {
       "name": "create test",
       "description": "test dest",
-      "code": "22fd22"
+      "code": "khmer3"
     }
   ]
 }

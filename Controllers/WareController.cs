@@ -27,7 +27,7 @@ namespace productstockingv1.Controllers
 
         //modified
         //get all or specific ware
-        [HttpGet("test")]
+        [HttpGet]
         public async Task<ActionResult> GetAll([FromBody] IdReq reqIdList)
         {
             var Warelist = new List<Ware>();
@@ -148,14 +148,13 @@ namespace productstockingv1.Controllers
 
             if (getWareList.Count > 0)
                 return Ok(ExtenFunction.ResponseDefault<WareCreateReq>(
-                        "Ware",
-                        null,
-                        false,
-                        -201,
-                        true,
-                        $"No wares created"
-                    )
-                );
+                    "Ware",
+                    null,
+                    false,
+                    -201,
+                    true,
+                    $"No wares created"
+                ));
 
             var WareList = req.command.Select(item => _mapper.Map<Ware>(item)).ToList();
 

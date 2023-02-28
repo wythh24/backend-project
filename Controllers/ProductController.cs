@@ -34,7 +34,7 @@ namespace productstockingv1.Controllers
         public async Task<ActionResult> GetProduct(IdReq id = null)
         {
             var ProductList = new List<Product>();
-            if (id.Id != null && id.Id.ToString() != "string")
+            if (id.Id != null)
             {
                 foreach (var item in id.Id)
                 {

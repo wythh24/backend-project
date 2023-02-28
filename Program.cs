@@ -38,6 +38,7 @@ builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
 
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();
+builder.Services.AddScoped<IValidator<WareCreateReq>, WareValidate>();
 
 builder.Services.AddFluentValidation();
 
