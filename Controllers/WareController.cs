@@ -25,52 +25,77 @@ namespace productstockingv1.Controllers
             _mapper = mapper;
         }
 
+        //modified
         //get all or specific ware
-        [HttpGet("GetAll")]
-        public async Task<ActionResult> GetAll(IdReq id)
+        [HttpGet("test")]
+        public async Task<ActionResult> GetAll([FromBody] IdReq reqIdList)
         {
             var Warelist = new List<Ware>();
-            if (id.Id != null && id.Id.ToString() != "string" && !string.IsNullOrEmpty(id.Id.ToString()))
+            //modified condition
+            if (reqIdList.Id != null)
             {
-                foreach (var item in id.Id)
+                foreach (var item in reqIdList.Id)
                 {
                     var ware = await _context.getRepository<Ware, string>().GetAsync(item);
-                    if(ware!=null) Warelist.Add(ware);
+                    if (ware != null) Warelist.Add(ware);
                 }
 
-                return Ok(ExtenFunction.ResponseDefault("ware", Warelist));
+                return Ok(Warelist.Count > 0
+                    ? ExtenFunction.ResponseDefault("Ware", Warelist)
+                    : ExtenFunction.ResponseDefault("Ware", Warelist, true, 400, true,
+                        "Ids of wares are required to perform querying"));
             }
-            else
-            {
-                var all = _context.getRepository<Ware, string>().GetAllQueryable().ToList();
-                var result = _mapper.Map<List<WareResponse>>(all);
-                return Ok(ExtenFunction.ResponseDefault("ware", result, false, 400));
-            }
+
+            Warelist = _context.getRepository<Ware, string>().GetAllQueryable().ToList();
+            //var resultList = _mapper.Map<List<WareResponse>>(Warelist);
+
+            return Ok(ExtenFunction.ResponseDefault(
+                "Ware",
+                _mapper.Map<List<WareResponse>>(Warelist),
+                true,
+                300
+            ));
         }
+
+        //get List Ware or specific (POST)
         [HttpPost("getAll")]
-        public async Task<ActionResult> GetWare(IdReq id = null)
+        public async Task<ActionResult> GetWareList(IdReq reqIdList)
         {
-            var WareList = new List<Ware>();
-            if (id.Id != null && id.Id.ToString() != "string")
+            var Warelist = new List<Ware>();
+            //modified condition
+            if (reqIdList.Id != null)
             {
-                foreach (var item in id.Id)
+                foreach (var item in reqIdList.Id)
                 {
-                    var p = await _context.getRepository<Ware, string>().GetAsync(item);
-                    if (p != null) WareList.Add(p);
+                    var ware = await _context.getRepository<Ware, string>().GetAsync(item);
+                    if (ware != null) Warelist.Add(ware);
                 }
+
+                return Ok(Warelist.Count > 0
+                    ? ExtenFunction.ResponseDefault("Ware", Warelist)
+                    : ExtenFunction.ResponseDefault(
+                        "Ware",
+                        Warelist,
+                        true,
+                        400,
+                        true,
+                        "Ids of wares are required to perform querying"
+                    )
+                );
             }
 
-            else if (id.Id == null || string.IsNullOrEmpty(id.Id.ToString()) || id.Id.ToString() == "string")
-            {
-                var all = _context.getRepository<Ware, string>().GetAllQueryable().ToList();
+            Warelist = _context.getRepository<Ware, string>().GetAllQueryable().ToList();
+            // var resultList = _mapper.Map<List<WareResponse>>(Warelist);
 
-                var result = _mapper.Map<List<WareResponse>>(all);
-
-                return Ok(ExtenFunction.ResponseDefault("Product", result, false));
-            }
-
-            return Ok(ExtenFunction.ResponseDefault("Product", WareList));
+            return Ok(ExtenFunction.ResponseDefault(
+                "Ware",
+                _mapper.Map<List<WareResponse>>(Warelist),
+                true,
+                300
+            ));
         }
+
+        //get by id (query)
         [HttpGet("{id}")]
         public async Task<ActionResult> GetWare(string id)
         {
@@ -84,10 +109,12 @@ namespace productstockingv1.Controllers
 
             //passed
             return Ok(WareList.Count > 0
-                ? ExtenFunction.ResponseDefault("Product", WareList, false, 302)
-                : ExtenFunction.ResponseDefault("Product", WareList, false)
+                ? ExtenFunction.ResponseDefault("Ware", WareList, false, 302)
+                : ExtenFunction.ResponseNotFound("Ware", WareList, false, 404, true,
+                    $"Ware with id {id} not found")
             );
         }
+
         [HttpGet("GetById")]
         public async Task<ActionResult> GetByBodyId([FromBody] GetT req)
         {
@@ -98,15 +125,37 @@ namespace productstockingv1.Controllers
                 var ware = await _context.getRepository<Ware, string>().GetAsync(req.Id);
                 if (ware != null) WareList.Add(ware);
             }
+
             return Ok(WareList.Count > 0
-                ? ExtenFunction.ResponseDefault("Product", WareList, false, 302)
-                : ExtenFunction.ResponseDefault("Product", WareList, false));
+                ? ExtenFunction.ResponseDefault("Ware", WareList, false, 302)
+                : ExtenFunction.ResponseDefault("Ware", WareList, false, 404, true,
+                    $"Ware with id {req.Id} not found"));
         }
+
+        // modified add condition check exist ware by ware code
         [HttpPost]
         public async Task<ActionResult<Ware>> CreateWare(ListWareCreateReq req)
         {
             //change to Any()
             if (!req.command.Any()) return BadRequest("Request must be filled");
+
+            //select all code from request
+            var wareListId = req.command.Select(e => e.Code).Distinct().ToList();
+
+            //get ware from code request
+            var getWareList = _context.getRepository<Ware, string>().GetAllQueryable()
+                .Where(e => wareListId.Contains(e.Code)).ToList();
+
+            if (getWareList.Count > 0)
+                return Ok(ExtenFunction.ResponseDefault<WareCreateReq>(
+                        "Ware",
+                        null,
+                        false,
+                        -201,
+                        true,
+                        $"No wares created"
+                    )
+                );
 
             var WareList = req.command.Select(item => _mapper.Map<Ware>(item)).ToList();
 
@@ -115,13 +164,15 @@ namespace productstockingv1.Controllers
             {
                 await _context.getRepository<Ware, string>().CreateBatchAsync(WareList);
                 _context.Commit();
-                return Ok(new
-                {
-                    success = true,
-                    statusCode = 200,
-                    message = $"Successfully created {WareList.Count} products",
-                    data = WareList.Select(e => e.Id).ToList()
-                });
+
+                return Ok(ExtenFunction.ResponseDefault(
+                    "Ware",
+                    WareList.Select(e => e.Id).ToList(),
+                    true,
+                    201,
+                    true,
+                    $"Successfully created {WareList.Count} Wares")
+                );
             }
             catch (Exception)
             {
@@ -129,12 +180,12 @@ namespace productstockingv1.Controllers
                 return Conflict("Something gone wrong!");
             }
         }
-        
+
+        //fixme test update ware
         [HttpPut]
         public async Task<ActionResult> UpdateWare(ListWareUpdateReq req)
         {
-            if (!req.command.Any())
-                return BadRequest("Not found Request");
+            if (!req.command.Any()) return BadRequest("Not found Request");
 
             var WareList = new List<Ware>();
 
@@ -143,15 +194,11 @@ namespace productstockingv1.Controllers
                 foreach (var item in req.command)
                 {
                     var ware = await _context.getRepository<Ware, string>().GetAsync(item.Id);
-                    WareList.Add(ware);
+                    if (ware != null) WareList.Add(ware);
                 }
             }
 
-            var WareReq = new List<WareUpdateReq>();
-            foreach (var item in req.command)
-            {
-                WareReq.Add(item);
-            }
+            var WareReq = req.command.ToList();
 
             if (WareList.Count > 0)
             {
@@ -165,49 +212,72 @@ namespace productstockingv1.Controllers
                 }
             }
 
+            if (WareList.Count < WareReq.Count)
+                return BadRequest(ExtenFunction.ResponseDefault<WareUpdateReq>(
+                    "Ware",
+                    null,
+                    false,
+                    304,
+                    true,
+                    $"No wares updated"
+                ));
 
             _context.BeginTransaction();
             try
             {
                 await _context.getRepository<Ware, string>().UpdateBatchAsync(WareList);
+
                 _context.Commit();
-                return Ok($"Product update {WareList.Count}");
+
+                return Ok(ExtenFunction.ResponseDefault(
+                    "Ware",
+                    WareList.Select(e => e.Id).ToList(),
+                    true,
+                    200,
+                    true,
+                    $"Successfully updated {WareList.Count} Wares"
+                ));
             }
             catch (Exception)
             {
                 _context.RollBack();
-                return BadRequest("Update Product was false");
+
+                return BadRequest($"Something gone wrong");
             }
         }
-        
+
         [HttpDelete]
         public async Task<ActionResult> DeleteProduct(IdReq req)
         {
-            if (req == null) return BadRequest("Id must be filled");
+            if (!req.Id.Any()) return BadRequest("Id must be filled");
 
             var wareList = new List<Ware>();
 
-            if (req != null)
+            foreach (var item in req.Id)
             {
-                foreach (var item in req.Id)
-                {
-                    var ware = await _context.getRepository<Ware, string>().GetAsync(item);
-                    if (ware != null) wareList.Add(ware);
-                }
+                var ware = await _context.getRepository<Ware, string>().GetAsync(item);
+                if (ware != null) wareList.Add(ware);
             }
+
+            if (req.Id.Count > wareList.Count)
+                return Ok(new
+                {
+                    id = req.Id.ToList()
+                });
 
             _context.BeginTransaction();
             try
             {
                 await _context.getRepository<Ware, string>().DeleteBatchAsync(wareList);
                 _context.Commit();
-                return Ok(new
-                {
-                    success = true,
-                    StatusCode(200).StatusCode,
-                    message = $"Successfully deleted {wareList.Count} products",
-                    data = wareList.Select(e => e.Id).ToList()
-                });
+                return Ok(ExtenFunction.ResponseDefault(
+                    "Ware",
+                    wareList.Select(e => e.Id).ToList(),
+                    true,
+                    200,
+                    true,
+                    $"Successfully deleted {wareList.Count} Wares"
+                ));
             }
             catch (Exception)
             {

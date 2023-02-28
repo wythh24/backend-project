@@ -55,18 +55,3 @@ public class StockProfile : Profile
     }
 }
 
-public class WareProfile : Profile
-{
-    private readonly Random _getCode = new Random();
-
-    public WareProfile()
-    {
-        CreateMap<Ware,WareResponse>();
-        CreateMap<WareCreateReq, Ware>()
-            .ForMember(e=> e.Id,
-                Option=>
-                    Option.MapFrom(e=>Guid.NewGuid().ToString())
-                )
-            ;
-    }
-}

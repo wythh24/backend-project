@@ -8,9 +8,3 @@ public class ProductUpdateReq
     public string? Description { get; set; }
 }
 
-public class WareUpdateReq
-{
-    public string? Id { get; set; }
-    public string? name { get; set; }
-    public string? description { get; set; }
-}

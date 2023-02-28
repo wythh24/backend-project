@@ -1,17 +1,72 @@
-### get all or specific ware
-GET https://localhost:7170/api/Ware/GetAll
+### (passed) get all or specific ware
+GET https://localhost:7170/api/Ware/test
 Content-Type: application/json
 
 {
-  "id": null
 }
 
-###(completed) get all post
+### (passed) get all post
 POST https://localhost:7170/api/Ware/getAll
 Content-Type: application/json
 
 {
-  
 }
 
+### (passed) get a ware with id (query)
+GET https://localhost:7170/api/Ware/2222
 
+### (passed) get a ware with id (body)
+GET https://localhost:7170/api/Ware/GetById
+Content-Type: application/json
+
+{
+  "id": "111"
+}
+
+### (passed) create ware list
+POST https://localhost:7170/api/Ware
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "name": "create test",
+      "description": "test dest",
+      "code": "1f1d11"
+    },
+    {
+      "name": "create test",
+      "description": "test dest",
+      "code": "22fd22"
+    }
+  ]
+}
+
+### (passed) Update wares by id
+PUT https://localhost:7170/api/Ware
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "id": "1111",
+      "name": "test 111",
+      "description": ""
+    },
+    {
+      "id": "2",
+      "name": "dkdk",
+      "description": ""
+    }
+  ]
+}
+
+### (passed) Delete wares by id
+DELETE https://localhost:7170/api/Ware
+Content-Type: application/json
+
+{
+  "id": [
+    "2222"
+  ]
+}

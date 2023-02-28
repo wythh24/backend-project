@@ -8,9 +8,3 @@ public class ProductCreateReq
     public string Code { get; set; }
 }
 
-public class WareCreateReq
-{
-    public string name { get; set; }
-    public string description { get; set; }
-    public string Code { get; set; }
-}

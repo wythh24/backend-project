@@ -1,3 +1,5 @@
+using productstockingv1.models;
+
 namespace productstockingv1.Interfaces;
 
 public interface IKey<T>

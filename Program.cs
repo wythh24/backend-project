@@ -13,14 +13,13 @@ using productstockingv1.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//comment before modify
 builder.Services.AddDbContext<ProductContext>(
-               options =>
-               {
-
-                   options.UseSqlServer(builder.Configuration.GetConnectionString("Developments"));
-               },
-               ServiceLifetime.Transient
-               );
+    options =>
+    {
+        options.UseMySql(builder.Configuration.GetConnectionString("Development"),
+            Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.23-mysql"));
+    });
 //add dbcontext
 builder.Services.AddDbContext<IProductContext, ProductContext>();
 
