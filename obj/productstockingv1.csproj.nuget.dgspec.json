@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Atech\\month2\\week3\\Backend_project\\backend-project\\productstockingv1.csproj": {}
+    "D:\\C#_Atech\\Project\\backend-project\\productstockingv1.csproj": {}
   },
   "projects": {
-    "D:\\Atech\\month2\\week3\\Backend_project\\backend-project\\productstockingv1.csproj": {
+    "D:\\C#_Atech\\Project\\backend-project\\productstockingv1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Atech\\month2\\week3\\Backend_project\\backend-project\\productstockingv1.csproj",
+        "projectUniqueName": "D:\\C#_Atech\\Project\\backend-project\\productstockingv1.csproj",
         "projectName": "productstockingv1",
-        "projectPath": "D:\\Atech\\month2\\week3\\Backend_project\\backend-project\\productstockingv1.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "D:\\Atech\\month2\\week3\\Backend_project\\backend-project\\obj\\",
+        "projectPath": "D:\\C#_Atech\\Project\\backend-project\\productstockingv1.csproj",
+        "packagesPath": "C:\\Users\\Windows\\.nuget\\packages\\",
+        "outputPath": "D:\\C#_Atech\\Project\\backend-project\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Windows\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -119,7 +116,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

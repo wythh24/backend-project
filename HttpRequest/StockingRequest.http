@@ -3,7 +3,10 @@ GET https://localhost:7170/api/Stock/Getall
 Content-Type: application/json
 
 {
-  "id": null
+  "id": [
+    "FA3E2999-712B-44B8-914B-CEE41EF3A184",
+    "2D103841-9BF0-49E6-AEB1-DDA8A225824C"
+  ]
 }
 
 ###(Completed) Get all Stocking in post No.83
@@ -21,7 +24,7 @@ GET https://localhost:7170/api/Stock/GetById
 Content-Type: application/json
 
 {
-  "id": "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+  "id": null
 }
 
 ### (completed) Get By ProductId
@@ -29,9 +32,7 @@ GET https://localhost:7170/api/Stock/GetByProduct
 Content-Type: application/json
 
 {
-  "ProductId": [
-    "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
-  ]
+  "ProductId": null
 }
 
 ###(completed) Post By ProductId
@@ -39,9 +40,7 @@ POST https://localhost:7170/api/Stock/GetByProduct
 Content-Type: application/json
 
 {
-  "ProductId": [
-    "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
-  ]
+  "ProductId": null
 }
 
 
@@ -52,9 +51,9 @@ Content-Type: application/json
 {
   "command": [
       {
-        "Code": "P-0001",
-        "WareCode": "A-0001",
-        "Quantity": 500
+        "productcode": "P-0001",
+        "warecode": "A-0001",
+        "quantity": 500
       }
   ]
   
@@ -65,7 +64,7 @@ GET https://localhost:7170/api/Stock/GetByProductCodes
 Content-Type: application/json
 
 {
-  "Productcodes": [
+  "productcodes": [
     "P-0001"
   ]
 }
@@ -76,7 +75,7 @@ Content-Type: application/json
 
 {
   "productcodes": [
-    "P-0001"
+    "P"
   ]
 }
 

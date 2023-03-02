@@ -23,9 +23,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<ProductContext>(
     options =>
     {
-        options.UseMySql(builder.Configuration.GetConnectionString("Development"),
-            Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.23-mysql"));
-    });
+
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Developments"));
+    },
+    ServiceLifetime.Transient
+);
 //add dbcontext
 builder.Services.AddDbContext<IProductContext, ProductContext>();
 
