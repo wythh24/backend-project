@@ -238,38 +238,40 @@ namespace productstockingv1.Controllers
             var ProductList = new List<Product>();
             var Stock = new List<Stocking>();
             Stock = null;
-            var table = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
-            var map = _mapper.Map<List<StockResponse>>(table);
+
+            var st = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(st);
+
             if (req.ProductId != null)
             {
                 foreach (var item in req.ProductId)
                 {
-                    // var p = await _context.getRepository<Product, string>().GetAsyncd(item);
                     var pro = _context.getRepository<Product, string>().GetAllQueryable().ToList()
                         .Where(e => e.Id == item);
+
                     if (pro != null)
                     {
                         foreach (var p in pro)
                         {
-                            var st = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                            var s = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
                                 .Where(e => e.ProductId == p.Id);
-                            if (st != null)
+
+                            if (s != null)
                             {
-                                return Ok(ExtenFunction.StockingResponse("Stocking",
-                                    st.Select(e => new
-                                    {
-                                        product = new
+                                return Ok(ExtenFunction.StockingResponse("stocking(s)"
+                                        , s.Select(e => new
                                         {
-                                            Id = e.product.Id,
-                                            code = e.product.Code,
-                                            stockings = Stock,
-                                            name = e.product.Name,
-                                            price = e.product.Price,
-                                            description = e.product.Description,
-                                        },
-                                        OnHands = map.Where(s => s.ProductId == p.Id).Sum(s => s.Quantity)
-                                    }).ToList()
-                                    , false, 302, true, null)
+                                            product = new
+                                            {
+                                                Id = e.product.Id,
+                                                code = e.product.Code,
+                                                stocking = Stock,
+                                                price = e.product.Price,
+                                                description = e.product.Description,
+                                            },
+                                            OnHands = map.Where(e => e.ProductId == p.Id).Sum(k => k.Quantity),
+                                        }).ToList(), true, 200, true
+                                    )
                                 );
                             }
                         }
@@ -277,17 +279,21 @@ namespace productstockingv1.Controllers
                 }
             }
 
-            return Ok(ExtenFunction.StockingResponse("Stocking",
-                ProductList.ToList()
-                , false, 404, false, null)
+            return Ok(new
+                {
+                    success = true,
+                    StatusCode = 200,
+                    message = $"Success returned stocking",
+                    data = Stock
+                }
             );
         }
 
-        //fixme modify condition (error)
+        //(modified) modify condition 
         [HttpPost("GetByProduct")]
         public async Task<ActionResult> GetPostProduct(ListStockStringReq req)
         {
-            if (!req.ProductId.Any()) return BadRequest("Must be filled request body");
+            /*if (!req.ProductId.Any()) return BadRequest("Must be filled request body");
 
             //get product with product id
             //modified to get by distinct
@@ -315,7 +321,7 @@ namespace productstockingv1.Controllers
                     onhands = productList.Sum(e => e.Quantity)
                 };
 
-                productData.Add(product);*/
+                productData.Add(product);#1#
                 productData.Add(new
                 {
                     id = item.Id,
@@ -349,7 +355,62 @@ namespace productstockingv1.Controllers
             catch (Exception)
             {
                 return BadRequest("Something gone wrong");
+            }*/
+            // if (!req.ProductId.Any()) return BadRequest("");
+
+            decimal Quantity = 0;
+            var ProductList = new List<Product>();
+            var Stock = new List<Stocking>();
+            Stock = null;
+
+            var st = _context.getRepository<Stocking, string>().GetAllQueryable().ToList();
+            var map = _mapper.Map<List<StockResponse>>(st);
+
+            if (req.ProductId != null)
+            {
+                foreach (var item in req.ProductId)
+                {
+                    var pro = _context.getRepository<Product, string>().GetAllQueryable().ToList()
+                        .Where(e => e.Id == item);
+
+                    if (pro != null)
+                    {
+                        foreach (var p in pro)
+                        {
+                            var s = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                                .Where(e => e.ProductId == p.Id);
+
+                            if (s != null)
+                            {
+                                return Ok(ExtenFunction.StockingResponse("stocking(s)"
+                                        , s.Select(e => new
+                                        {
+                                            product = new
+                                            {
+                                                Id = e.product.Id,
+                                                code = e.product.Code,
+                                                stocking = Stock,
+                                                price = e.product.Price,
+                                                description = e.product.Description,
+                                            },
+                                            OnHands = map.Where(e => e.ProductId == p.Id).Sum(k => k.Quantity),
+                                        }).ToList(), true, 200, true
+                                    )
+                                );
+                            }
+                        }
+                    }
+                }
             }
+
+            return Ok(new
+                {
+                    success = true,
+                    StatusCode = 200,
+                    message = $"Success returned stocking",
+                    data = Stock
+                }
+            );
         }
 
         //fixme error list of product code 
@@ -871,21 +932,25 @@ namespace productstockingv1.Controllers
         [HttpPut("transfer")]
         public async Task<ActionResult> TransferQuantity(ListStockTransferQtyReq req)
         {
-            if (!req.commands.Any()) return BadRequest("Empty body");
+            if (!req.commands.Any()) return BadRequest("Empty body must be filled");
 
             var StockTransferList = new List<Stocking>();
             var AddNewStock = new List<Stocking>();
+            var isExistTarget = true;
 
             foreach (var item in req.commands.ToList())
             {
+                //get ware in stock by ware id and product id
                 var sourceWare = _context.getRepository<Stocking, string>().GetAllQueryable()
                     .Where(e => item.productId.Contains(e.ProductId) && item.sourceWareId.Contains(e.WareId)).ToList();
 
+                //get ware target in stock by ware id and product id
                 var targetWare = _context.getRepository<Stocking, string>().GetAllQueryable()
                     .Where(e => item.productId.Contains(e.ProductId) && item.targetWareId.Contains(e.WareId)).ToList();
 
                 if (sourceWare.Any() && targetWare.Any())
                 {
+                    //update value from request
                     foreach (var source in sourceWare)
                     {
                         foreach (var target in targetWare)
@@ -895,17 +960,28 @@ namespace productstockingv1.Controllers
                                 source.Quantity -= item.quantity;
                                 target.Quantity += item.quantity;
                             }
+                            else return BadRequest($"Invalid quantity to transfer");
                         }
                     }
 
                     StockTransferList.AddRange(sourceWare);
                     StockTransferList.AddRange(targetWare);
                 }
-
                 else if (item.productId != null && item.targetWareId != null)
                 {
+                    //get value from each table
                     var getProCode = await _context.getRepository<Product, string>().GetAsync(item.productId);
+
                     var getWareCode = await _context.getRepository<Ware, string>().GetAsync(item.targetWareId);
+
+                    if (getProCode == null || getWareCode == null)
+                        return BadRequest(new
+                        {
+                            success = false,
+                            statuscode = 404,
+                            message = $"No stocking for product id {item.productId} in the ware id {item.sourceWareId}",
+                            data = (string) null
+                        });
 
                     try
                     {
@@ -915,22 +991,84 @@ namespace productstockingv1.Controllers
                             WareCode = getWareCode.Code,
                             Quantity = item.quantity
                         };
-                        if (newStock != null) AddNewStock.Add(_mapper.Map<Stocking>(newStock));
+                        if (newStock != null)
+                        {
+                            isExistTarget = false;
+                            AddNewStock.Add(_mapper.Map<Stocking>(newStock));
+                        }
                     }
                     catch (Exception)
                     {
-                        return BadRequest("Something gone wrong");
+                        return BadRequest("Create new stock was false");
                     }
                 }
             }
 
-            //fixme create response 
-            return Ok(new
+            _context.BeginTransaction();
+            try
             {
-                data = StockTransferList,
-                stockCount = StockTransferList.Count,
-                newStock = AddNewStock
-            });
+                if (!isExistTarget)
+                {
+                    await _context.getRepository<Stocking, string>().CreateBatchAsync(AddNewStock);
+                    
+                    //customize response information
+                    //fixme on develop response
+                    var resNewData = new StockTransferReq();
+                    foreach (var item in req.commands)
+                    {
+                        // initialize value as an object
+                        resNewData = new StockTransferReq
+                        {
+                            productId = item.productId,
+                            quantity = item.quantity,
+                            sourceWareId = item.sourceWareId,
+                            targetWareId = item.targetWareId
+                        };
+                    }
+
+                    return Ok(new
+                    {
+                        success = true,
+                        StatusCode(200).StatusCode,
+                        message =
+                            $"The quantity,{resNewData.quantity}, of the stocking for the product id " +
+                            $"{resNewData.productId}" +
+                            $" in the ware id {resNewData.sourceWareId} transfer to the ware id {resNewData.targetWareId}",
+                        data = $"{resNewData.quantity}: {resNewData.sourceWareId} > {resNewData.targetWareId}"
+                    });
+                }
+
+                await _context.getRepository<Stocking, string>().UpdateBatchAsync(StockTransferList);
+                _context.Commit();
+
+                var resDetail = new StockTransferReq();
+                foreach (var item in req.commands)
+                {
+                    resDetail = new StockTransferReq
+                    {
+                        productId = item.productId,
+                        quantity = item.quantity,
+                        sourceWareId = item.sourceWareId,
+                        targetWareId = item.targetWareId
+                    };
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    StatusCode(200).StatusCode,
+                    message =
+                        $"The quantity,{resDetail.quantity}, of the stocking for the product id " +
+                        $"{resDetail.productId}" +
+                        $" in the ware id {resDetail.sourceWareId} transfer to the ware id {resDetail.targetWareId}",
+                    data = $"{resDetail.quantity}: {resDetail.sourceWareId} > {resDetail.targetWareId}"
+                });
+            }
+            catch (Exception)
+            {
+                _context.RollBack();
+                return BadRequest($"Something gone wrong");
+            }
         }
     }
 }

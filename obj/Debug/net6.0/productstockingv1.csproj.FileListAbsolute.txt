@@ -604,3 +604,8 @@ D:\Atech\month2\week3\Backend_project\backend-project\obj\Debug\net6.0\refint\pr
 D:\Atech\month2\week3\Backend_project\backend-project\obj\Debug\net6.0\productstockingv1.pdb
 D:\Atech\month2\week3\Backend_project\backend-project\obj\Debug\net6.0\productstockingv1.genruntimeconfig.cache
 D:\Atech\month2\week3\Backend_project\backend-project\obj\Debug\net6.0\ref\productstockingv1.dll
+D:\Atech\month2\week3\Backend_project\backend-project\bin\Debug\net6.0\System.Web.Cors.dll
+D:\Atech\month2\week3\Backend_project\backend-project\bin\Debug\net6.0\System.Net.Http.Formatting.dll
+D:\Atech\month2\week3\Backend_project\backend-project\bin\Debug\net6.0\System.Web.Http.dll
+D:\Atech\month2\week3\Backend_project\backend-project\bin\Debug\net6.0\System.Web.Http.Cors.dll
+D:\Atech\month2\week3\Backend_project\backend-project\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

@@ -25,7 +25,7 @@ Content-Type: application/json
   "id": "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
 }
 
-### (completed) Get By ProductId
+### (passed) Get By ProductId 
 GET https://localhost:7170/api/Stock/GetByProduct
 Content-Type: application/json
 
@@ -35,7 +35,7 @@ Content-Type: application/json
   ]
 }
 
-###() Post By ProductId (fixme)
+###(passed) Post By ProductId
 POST https://localhost:7170/api/Stock/GetByProduct
 Content-Type: application/json
 
@@ -87,7 +87,7 @@ Content-Type: application/json
 
 
 
-###(completed) Updated
+###(passed) Updated
 PUT https://localhost:7170/api/Stock
 Content-Type: application/json
 
@@ -135,6 +135,7 @@ Content-Type: application/json
 }
 
 ### (fixme)Transfer to another ware
+### v2 in develop can transfer only one product for each request
 PUT https://localhost:7170/api/Stock/transfer
 Content-Type: application/json
 
@@ -142,9 +143,9 @@ Content-Type: application/json
   "commands": [
     {
       "productId": "73b3cb2f-77a2-41e5-ae86-014ba188843b",
-      "quantity": 200,
-      "sourceWareId": "1f9174c3-99e5-407f-b3b9-1e4b6599b12",
-      "targetWareId": "6f098d93-1542-449c-ac85-760c01a80a791"
+      "quantity": 1,
+      "sourceWareId": "1f9174c3-99e5-407f-b3b9-1e4b6599b121",
+      "targetWareId": "239d546e-5dd4-4011-b70f-24cf46e18531"
     }
   ]
 }
