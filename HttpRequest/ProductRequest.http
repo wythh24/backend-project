@@ -76,7 +76,7 @@ Content-Type: application/json
     {
       "id": "05ecfab3-87c7-4976-9185-c902c7ef8f2c",
       "name": "Tessst",
-      "price": 0,
+      "price": 1110,
       "description": "desss"
     }
   ]
