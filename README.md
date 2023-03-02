@@ -46,7 +46,7 @@
 #### Clone project
 
 ```bash
-git clone https://github.com/wythh24/backend-project.git
+git clone https://github.com/wythh24/backend-project.git v2.0.0
 ```
 
 #### Configuration connection string
