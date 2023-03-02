@@ -11,10 +11,7 @@ GET https://localhost:7170/api/Product
 Content-Type: application/json
 
 {
-  "id": [
-    "73b3cb2f-77a2-41e5-ae86-014ba188843b"
-    
-  ]
+  "id": []
 }
 
 ### (passed)  Create product
@@ -23,15 +20,16 @@ Content-Type: application/json
 
 {
   "command": [
+    
     {
       "name": "{{$random.alphabetic(10)}}",
-      "price": "{{$random.float(12.2)}}",
+      "price": 0,
       "description": null,
       "code": "{{$random.float(10.2)}}"
     },
-    {
+     {
       "name": "{{$random.alphabetic(10)}}",
-      "price": "{{$random.float(12.2)}}",
+      "price": 0,
       "description": null,
       "code": "{{$random.float(10.2)}}"
     }
@@ -56,7 +54,8 @@ Content-Type: application/json
 
 {
   "id": [
-    "a7441313-532e-4766-a972-47be0b62c155"
+    "0bcd7063-3d9a-4d50-9e48-5cd11c7a6fff",
+    "f1b7579a-f12c-4396-9545-00e81b7610a8"
   ]
 }
 
@@ -75,17 +74,10 @@ Content-Type: application/json
 {
   "command": [
     {
-      "id": "df06fb32-d840-4abc-bbfd-178e3e742fc1",
-      "name": "1111",
-      "price": 20.0
-    },
-    {
-      "id": "9bbd9f6f-5e1c-4cf8-a952-5bb65cd39dd2",
-      "name": "2222",
-      "price": 10.0
+      "id": "05ecfab3-87c7-4976-9185-c902c7ef8f2c",
+      "name": "Tessst",
+      "price": 0,
+      "description": "desss"
     }
   ]
 }
-
-### test development domain
-GET http://localhost:5113/api/Product/111

@@ -1,8 +1,9 @@
 ### (passed) get all or specific ware
-GET https://localhost:7170/api/Ware/test
+GET https://localhost:7170/api/Ware/
 Content-Type: application/json
 
 {
+  
 }
 
 ### (passed) get all post
@@ -10,6 +11,7 @@ POST https://localhost:7170/api/Ware/getAll
 Content-Type: application/json
 
 {
+  
 }
 
 ### (passed) get a ware with id (query)
@@ -67,6 +69,6 @@ Content-Type: application/json
 
 {
   "id": [
-    "2222"
+    "fc9a282d-8a78-44c4-9dc9-92e12ba10c5a"
   ]
 }

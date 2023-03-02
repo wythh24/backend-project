@@ -1,9 +1,13 @@
 using System.Data;
+using productstockingv1.Interfaces;
+using productstockingv1.models;
 
 namespace productstockingv1.ExtensionFunction;
 
 public static class ExtenFunction
 {
+    private static readonly IUnitOfWork _context;
+
     public static Object StockingResponse<T>(
         string _controller = default,
         List<T>? _data = null,

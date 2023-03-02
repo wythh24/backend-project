@@ -14,6 +14,10 @@ using productstockingv1.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//ignore cycle
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 //Enable cors
 builder.Services.AddCors(options =>
     options.AddPolicy("corsPolicy",
@@ -34,14 +38,16 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
 builder.Services.AddScoped<IRepository<Ware, string>, WareRepository>();
 builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
+
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();
 builder.Services.AddScoped<IValidator<WareCreateReq>, WareValidate>();
 
 builder.Services.AddFluentValidation();
 
-// add mapper
+// add auto mapper
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
 
 
 builder.Services.AddControllers();

@@ -59,23 +59,24 @@ namespace productstockingv1.Controllers
 
         //get List Ware or specific (POST)
         [HttpPost("getAll")]
-        public async Task<ActionResult> GetWareList(IdReq reqIdList)
+        public async Task<ActionResult> GetWareList([FromBody] IdReq reqIdList)
         {
-            var Warelist = new List<Ware>();
+            var wareList = new List<Ware>();
             //modified condition
+            //if using .Any() request body must value 
             if (reqIdList.Id != null)
             {
                 foreach (var item in reqIdList.Id)
                 {
                     var ware = await _context.getRepository<Ware, string>().GetAsync(item);
-                    if (ware != null) Warelist.Add(ware);
+                    if (ware != null) wareList.Add(ware);
                 }
 
-                return Ok(Warelist.Count > 0
-                    ? ExtenFunction.ResponseDefault("Ware", Warelist)
+                return Ok(wareList.Count > 0
+                    ? ExtenFunction.ResponseDefault("Ware", wareList)
                     : ExtenFunction.ResponseDefault(
                         "Ware",
-                        Warelist,
+                        wareList,
                         true,
                         400,
                         true,
@@ -84,12 +85,12 @@ namespace productstockingv1.Controllers
                 );
             }
 
-            Warelist = _context.getRepository<Ware, string>().GetAllQueryable().ToList();
+            wareList = _context.getRepository<Ware, string>().GetAllQueryable().ToList();
             // var resultList = _mapper.Map<List<WareResponse>>(Warelist);
 
             return Ok(ExtenFunction.ResponseDefault(
                 "Ware",
-                _mapper.Map<List<WareResponse>>(Warelist),
+                _mapper.Map<List<WareResponse>>(wareList),
                 true,
                 300
             ));
@@ -188,6 +189,7 @@ namespace productstockingv1.Controllers
 
             var WareList = new List<Ware>();
 
+            //fixme get ware list without using loop
             foreach (var item in req.command)
             {
                 var ware = await _context.getRepository<Ware, string>().GetAsync(item.Id);
@@ -197,6 +199,7 @@ namespace productstockingv1.Controllers
             var WareReq = req.command.ToList();
 
             // check count of ware updated
+            //using WareUpdateReq in ResponseDefault it can be null (ResponseDefault<WareUpdateReq>)
             if (WareList.Count != WareReq.Count)
                 return BadRequest(ExtenFunction.ResponseDefault<WareUpdateReq>(
                     "Ware",
@@ -208,7 +211,6 @@ namespace productstockingv1.Controllers
                 ));
 
             //change value update
-
             foreach (var ware in WareList)
             {
                 foreach (var wreq in WareReq.Where(wreq => ware.Id == wreq.Id))
@@ -256,7 +258,7 @@ namespace productstockingv1.Controllers
                 if (ware != null) wareList.Add(ware);
             }
 
-            if (req.Id.Count > wareList.Count)
+            if (req.Id.Count != wareList.Count)
                 return Ok(new
                 {
                     id = req.Id.ToList()
@@ -266,6 +268,7 @@ namespace productstockingv1.Controllers
             try
             {
                 await _context.getRepository<Ware, string>().DeleteBatchAsync(wareList);
+
                 _context.Commit();
                 return Ok(ExtenFunction.ResponseDefault(
                     "Ware",
