@@ -7,6 +7,6 @@ public interface IUnitOfWork
     void Dispose();
     void RollBack();
     void Save();
-    
-    IRepository<TE, TK> getRepository<TE, TK>() where TE: class, IKey<TK>;
+
+    IRepository<TE, TK> getRepository<TE, TK>() where TE : class, IKey<TK>;
 }

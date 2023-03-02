@@ -1,0 +1,74 @@
+### (passed) get all or specific ware
+GET https://localhost:7170/api/Ware/
+Content-Type: application/json
+
+{
+  
+}
+
+### (passed) get all post
+POST https://localhost:7170/api/Ware/getAll
+Content-Type: application/json
+
+{
+  
+}
+
+### (passed) get a ware with id (query)
+GET https://localhost:7170/api/Ware/2222
+
+### (passed) get a ware with id (body)
+GET https://localhost:7170/api/Ware/GetById
+Content-Type: application/json
+
+{
+  "id": "111"
+}
+
+### (passed) create ware list
+POST https://localhost:7170/api/Ware
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "name": "1",
+      "description": "test dest",
+      "code": "khmer2"
+    },
+    {
+      "name": "create test",
+      "description": "test dest",
+      "code": "khmer3"
+    }
+  ]
+}
+
+### (passed) Update wares by id
+PUT https://localhost:7170/api/Ware
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "id": "1f9174c3-99e5-407f-b3b9-1e4b6599b121",
+      "name": "0000",
+      "description": ""
+    },
+    {
+      "id": "55bd64c9-080f-4721-8f22-e44cc7467336",
+      "name": "3333",
+      "description": ""
+    }
+  ]
+}
+
+### (passed) Delete wares by id
+DELETE https://localhost:7170/api/Ware
+Content-Type: application/json
+
+{
+  "id": [
+    "fc9a282d-8a78-44c4-9dc9-92e12ba10c5a"
+  ]
+}

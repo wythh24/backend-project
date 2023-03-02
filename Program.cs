@@ -1,17 +1,29 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Org.BouncyCastle.Crypto.Tls;
 using productstockingv1.Data;
-using productstockingv1.Interfaces;
 using productstockingv1.models;
-using productstockingv1.Models.Request;
+using productstockingv1.Interfaces;
 using productstockingv1.Repository;
+using productstockingv1.Models.Request;
 using productstockingv1.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//ignore cycle
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+//Enable cors
+builder.Services.AddCors(options =>
+    options.AddPolicy("corsPolicy",
+        build => { build.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin(); }));
+
+//comment before modify
 builder.Services.AddDbContext<ProductContext>(
     options =>
     {
@@ -24,14 +36,18 @@ builder.Services.AddDbContext<IProductContext, ProductContext>();
 //add scope
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRepository<Product, string>, ProductRepository>();
+builder.Services.AddScoped<IRepository<Ware, string>, WareRepository>();
+builder.Services.AddScoped<IRepository<Stocking, string>, StockingRepository>();
 
 //add validation
 builder.Services.AddScoped<IValidator<ProductCreateReq>, ProductValidate>();
+builder.Services.AddScoped<IValidator<WareCreateReq>, WareValidate>();
 
 builder.Services.AddFluentValidation();
 
-// add mapper
+// add auto mapper
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
 
 
 builder.Services.AddControllers();
@@ -40,6 +56,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("corsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

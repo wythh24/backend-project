@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using productstockingv1.Data;
+using productstockingv1.ExtensionFunction;
 using productstockingv1.Interfaces;
 using productstockingv1.models;
 using productstockingv1.Models.Request;
@@ -28,82 +29,62 @@ namespace productstockingv1.Controllers
         }
 
         // get product with post body (POST)
-        [EnableCors()]
+        [EnableCors("corsPolicy")]
         [HttpPost("getAll")]
-        public async Task<ActionResult> GetProduct(IdReq id = null)
+        public async Task<ActionResult> GetProduct(IdReq req = null)
         {
             var ProductList = new List<Product>();
-            if (id.Id != null && id.Id.ToString() != "string")
+
+            //fixme get product without loop
+            if (req.Id != null)
             {
-                foreach (var item in id.Id)
+                foreach (var item in req.Id)
                 {
                     var p = await _context.getRepository<Product, string>().GetAsync(item);
                     if (p != null) ProductList.Add(p);
                 }
+
+                return Ok(ExtenFunction.ResponseDefault("Product", ProductList));
             }
 
-            else if (id.Id == null || string.IsNullOrEmpty(id.Id.ToString()) || id.Id.ToString() == "string")
-            {
-                var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
+            //modified delete else if 
+            var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
 
-                var result = _mapper.Map<List<ProductResponse>>(all);
+            var result = _mapper.Map<List<ProductResponse>>(all);
 
-                return Ok(new
-                {
-                    success = true,
-                    status = 200,
-                    message = $"Successfully returned all products",
-                    data = result
-                });
-            }
-
-
-            return Ok(new
-            {
-                success = true,
-                status = 200,
-                message = $"Successfully returned {ProductList.Count} products",
-                data = ProductList
-            });
+            return Ok(ExtenFunction.ResponseDefault("Product", result, false));
         }
 
         // request with body (GET)
-        [HttpGet("test")]
-        public async Task<ActionResult> GetProductById(IdReq id = null)
+        [HttpGet]
+        public async Task<ActionResult> GetProductById([FromBody] IdReq req = null)
         {
             var ProductList = new List<Product>();
+            //modified condition
+            //fixme query style without loop
 
-            if (id.Id != null && id.Id.ToString() != "string")
+            if (req.Id != null)
             {
-                foreach (var item in id.Id)
+                //fixme get list of product without using loop
+                foreach (var item in req.Id)
                 {
                     var p = await _context.getRepository<Product, string>().GetAsync(item);
                     if (p != null) ProductList.Add(p);
                 }
+
+                return Ok(ExtenFunction.ResponseDefault("Product", ProductList));
             }
 
-            else if (id.Id == null || string.IsNullOrEmpty(id.Id.ToString()) || id.Id.ToString() == "string")
-            {
-                var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
 
-                var result = _mapper.Map<List<ProductResponse>>(all);
+            var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
 
-                return Ok(new
-                {
-                    success = true,
-                    status = 200,
-                    message = $"Successfully returned all products",
-                    data = result
-                });
-            }
+            var result = _mapper.Map<List<ProductResponse>>(all);
 
-            return Ok(new
-            {
-                success = true,
-                status = 200,
-                message = $"Successfully returned {ProductList.Count} products",
-                data = ProductList
-            });
+            return Ok(ExtenFunction.ResponseDefault(
+                "Product",
+                result,
+                false
+            ));
         }
 
         // query string
@@ -111,69 +92,48 @@ namespace productstockingv1.Controllers
         public async Task<ActionResult> GetProduct(string id)
         {
             var productList = new List<Product>();
-
+            //fixme get product without add to another list
 
             if (id != null)
             {
                 var product = await _context.getRepository<Product, string>().GetAsync(id);
-                productList.Add(product);
+                if (product != null) productList.Add(product);
             }
 
-            if (productList.Count < 0)
-            {
-                productList = null;
-                return Ok(new
-                {
-                    success = false,
-                    statusCode = 404,
-                    message = $"The product with the id {id} was not found",
-                    data = productList
-                });
-            }
-
-            return Ok(new
-            {
-                success = true,
-                statusCode = 302,
-                data = productList
-            });
+            //passed
+            return Ok(productList.Count > 0
+                ? ExtenFunction.ResponseDefault("Product", productList, false, 302)
+                : ExtenFunction.ResponseDefault("Product", productList, false)
+            );
         }
 
         [HttpGet("GetById")]
         public async Task<ActionResult> GetByBodyId([FromBody] GetT req)
         {
-            bool IsSuccess = true;
-            int StatusCode = 302;
-            string _message = "Successfully returned all products";
+            var productList = new List<Product>();
 
-            if (req == null) return BadRequest("Id must be filled");
-
-            var product = await _context.getRepository<Product, string>().GetAsync(req.Id);
-
-            if (product == null)
+            //fixme get product without add to another list
+            if (req.Id != null)
             {
-                IsSuccess = false;
-                StatusCode = 404;
-                _message = $"The product with id {req.Id} was not found";
-                product = null;
+                var product = await _context.getRepository<Product, string>().GetAsync(req.Id);
+                if (product != null) productList.Add(product);
             }
 
-            return Ok(new
-            {
-                success = IsSuccess,
-                status = StatusCode,
-                message = _message,
-                data = product
-            });
+            return Ok(productList.Count > 0
+                ? ExtenFunction.ResponseDefault("Product", productList, false, 302)
+                : ExtenFunction.ResponseDefault("Product", productList, false));
         }
 
         // create product
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(ListProductCreateReq req)
         {
-            if (req == null) return BadRequest("Request must be filled");
+            //change to Any()
+            if (!req.command.Any()) return BadRequest("Request must be filled");
 
             var productList = req.command.Select(item => _mapper.Map<Product>(item)).ToList();
+
+            if (productList.Count != req.command.ToList().Count) return BadRequest("not equal");
 
             _context.BeginTransaction();
             try
@@ -184,7 +144,8 @@ namespace productstockingv1.Controllers
                 {
                     success = true,
                     statusCode = 200,
-                    message = $"Successfully created {productList.Count} products",
+                    message =
+                        $"Successfully created {productList.Count} product{(productList.Count.Equals(1) ? "" : "s")}",
                     data = productList.Select(e => e.Id).ToList()
                 });
             }
@@ -198,29 +159,27 @@ namespace productstockingv1.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteProduct(IdReq req)
         {
-            if (req == null) return BadRequest("Id must be filled");
+            if (!req.Id.Any()) return BadRequest($"Id must be filled");
 
-            var ProductList = new List<Product>();
+            //modified removed product id list
+            //paste req.id as list into ProductList directly
+            var ProductList = _context.getRepository<Product, string>().GetAllQueryable()
+                .Where(e => req.Id.ToList().Contains(e.Id)).ToList();
 
-            if (req != null)
-            {
-                foreach (var item in req.Id)
-                {
-                    var product = await _context.getRepository<Product, string>().GetAsync(item);
-                    if (product != null) ProductList.Add(product);
-                }
-            }
+            //if list of product has incorrect id
+            if (ProductList.Count != req.Id.Count) return BadRequest($"Delete was false");
 
             _context.BeginTransaction();
             try
             {
                 await _context.getRepository<Product, string>().DeleteBatchAsync(ProductList);
+
                 _context.Commit();
                 return Ok(new
                 {
                     success = true,
                     StatusCode(200).StatusCode,
-                    message = $"Successfully deleted {ProductList.Count} products",
+                    message = $"Successfully deleted {ProductList.ToList().Count} products",
                     data = ProductList.Select(e => e.Id).ToList()
                 });
             }
@@ -234,50 +193,49 @@ namespace productstockingv1.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateProduct(ListProductUpdateReq req)
         {
-            if (!req.command.Any())
-                return BadRequest("Not found Request");
+            if (!req.command.Any()) return BadRequest("Not found Request");
 
             var ProductList = new List<Product>();
 
-            if (req.command.Any())
-            {
-                foreach (var item in req.command)
-                {
-                    var product = await _context.getRepository<Product, string>().GetAsync(item.Id);
-                    ProductList.Add(product);
-                }
-            }
-
-            var ProductReq = new List<ProductUpdateReq>();
+            //fixme get product without loop
             foreach (var item in req.command)
             {
-                ProductReq.Add(item);
+                var product = await _context.getRepository<Product, string>().GetAsync(item.Id);
+                if (product != null) ProductList.Add(product);
             }
 
-            if (ProductList.Count > 0)
+            var ProductReq = req.command.ToList();
+
+            if (ProductList.Count != ProductReq.Count) return Ok($"Updated was false");
+
+            foreach (var product in ProductList)
             {
-                foreach (var product in ProductList)
+                foreach (var proReq in ProductReq.Where(proReq => product.Id == proReq.Id))
                 {
-                    foreach (var proReq in ProductReq.Where(proReq => product.Id == proReq.Id))
-                    {
-                        product.Name = proReq.Name;
-                        product.Price = (decimal) proReq.Price;
-                    }
+                    product.Name = proReq.Name;
+                    product.Price = (decimal) proReq.Price;
+                    product.Description = proReq.Description;
                 }
             }
-
 
             _context.BeginTransaction();
             try
             {
                 await _context.getRepository<Product, string>().UpdateBatchAsync(ProductList);
                 _context.Commit();
-                return Ok($"Product update {ProductList.Count}");
+                //modified response
+                return Ok(new
+                {
+                    success = true,
+                    statuscode = 200,
+                    message = $"Successfully updated {ProductList.Count} product{(ProductList.Count > 1 ? "s" : "")}",
+                    data = ProductList.Select(e => e.Id).ToList()
+                });
             }
             catch (Exception)
             {
                 _context.RollBack();
-                return BadRequest("Update Product was false");
+                return BadRequest("Something gone wrong");
             }
         }
     }

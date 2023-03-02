@@ -1,0 +1,150 @@
+﻿### (Completed) Get all Stocking in get No.27
+GET https://localhost:7170/api/Stock/Getall
+Content-Type: application/json
+
+{
+  "id": null
+}
+
+###(Completed) Get all Stocking in post No.83
+POST https://localhost:7170/api/Stock
+Content-Type: application/json
+
+{
+  "id": null
+}
+
+###(completed) Get By Id query string No.138
+GET https://localhost:7170/api/Stock/FA3E2999-712B-44B8-914B-CEE41EF3A184
+
+### (Completed) Get By Id Body 
+GET https://localhost:7170/api/Stock/GetById
+Content-Type: application/json
+
+{
+  "id": "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+}
+
+### (completed) Get By ProductId
+GET https://localhost:7170/api/Stock/GetByProduct
+Content-Type: application/json
+
+{
+  "ProductId": [
+    "73b3cb2f-77a2-41e5-ae86-014ba188843b"
+  ]
+}
+
+###() Post By ProductId (fixme)
+POST https://localhost:7170/api/Stock/GetByProduct
+Content-Type: application/json
+
+{
+  "ProductId": [
+    "73b3cb2f-77a2-41e5-ae86-014ba188843b"
+  ]
+}
+
+
+###(passed) Create stocking as list
+POST https://localhost:7170/api/Stock/Create
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "productCode": "2.4824626",
+      "wareCode": "khmer2",
+      "quantity": 10
+    },
+    {
+      "productCode": "8.5424385",
+      "wareCode": "11d11",
+      "quantity": 10
+    }
+  ]
+}
+
+###(passed) get by Productcode(get)
+GET https://localhost:7170/api/Stock/GetByProductCodes
+Content-Type: application/json
+
+{
+  "Productcodes": [
+    "8.5424385"
+  ]
+}
+
+###(passed) get by Productcode
+POST https://localhost:7170/api/Stock/GetByProductCodes
+Content-Type: application/json
+
+{
+  "productcodes": [
+    "8.5424385"
+  ]
+}
+
+
+
+###(completed) Updated
+PUT https://localhost:7170/api/Stock
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "id": "2D103841-9BF0-49E6-AEB1-DDA8A225824C",
+      "quantity": 800
+    }
+  ]
+}
+
+###(passed) delete stocking by id list
+DELETE https://localhost:7170/api/Stock
+Content-Type: application/json
+
+{
+  "id": [
+  ]
+}
+
+### Create stock with new product list
+POST https://localhost:7170/api/Stock/newproduct
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "productCode": "new-995",
+      "productName": "one",
+      "price": 11,
+      "productDescription": "",
+      "wareCode": "11151",
+      "quantity": 100
+    },
+    {
+      "productCode": "new-993",
+      "productName": "two",
+      "price": 22,
+      "productDescription": "",
+      "wareCode": "1111",
+      "quantity": 100
+    }
+  ]
+}
+
+### (fixme)Transfer to another ware
+PUT https://localhost:7170/api/Stock/transfer
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "productId": "73b3cb2f-77a2-41e5-ae86-014ba188843b",
+      "quantity": 200,
+      "sourceWareId": "1f9174c3-99e5-407f-b3b9-1e4b6599b12",
+      "targetWareId": "6f098d93-1542-449c-ac85-760c01a80a791"
+    }
+  ]
+}
