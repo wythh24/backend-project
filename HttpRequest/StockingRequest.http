@@ -13,6 +13,7 @@ Content-Type: application/json
 {
   "id": null
 }
+
 ###(completed) Get By Id query string No.138
 GET https://localhost:7170/api/Stock/FA3E2999-712B-44B8-914B-CEE41EF3A184
 
@@ -34,7 +35,7 @@ Content-Type: application/json
   ]
 }
 
-###(completed) Post By ProductId (fixme)
+###() Post By ProductId (fixme)
 POST https://localhost:7170/api/Stock/GetByProduct
 Content-Type: application/json
 
@@ -93,7 +94,7 @@ Content-Type: application/json
 {
   "command": [
     {
-      "id" : "2D103841-9BF0-49E6-AEB1-DDA8A225824C",
+      "id": "2D103841-9BF0-49E6-AEB1-DDA8A225824C",
       "quantity": 800
     }
   ]
@@ -105,7 +106,6 @@ Content-Type: application/json
 
 {
   "id": [
-    
   ]
 }
 

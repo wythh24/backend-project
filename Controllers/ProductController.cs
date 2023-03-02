@@ -223,7 +223,14 @@ namespace productstockingv1.Controllers
             {
                 await _context.getRepository<Product, string>().UpdateBatchAsync(ProductList);
                 _context.Commit();
-                return Ok($"Product update {ProductList.Count}");
+                //modified response
+                return Ok(new
+                {
+                    success = true,
+                    statuscode = 200,
+                    message = $"Successfully updated {ProductList.Count} product{(ProductList.Count > 1 ? "s" : "")}",
+                    data = ProductList.Select(e => e.Id).ToList()
+                });
             }
             catch (Exception)
             {

@@ -23,13 +23,13 @@ Content-Type: application/json
     
     {
       "name": "{{$random.alphabetic(10)}}",
-      "price": 0,
+      "price": 10,
       "description": null,
       "code": "{{$random.float(10.2)}}"
     },
      {
       "name": "{{$random.alphabetic(10)}}",
-      "price": 0,
+      "price": 30,
       "description": null,
       "code": "{{$random.float(10.2)}}"
     }
@@ -48,7 +48,7 @@ Content-Type: application/json
 ### (passed) get a product by id (query)
 GET https://localhost:7170/api/Product/73b3cb2f-77a2-41e5-ae86-014ba188843
 
-### delete product as list
+### (passed)delete product as list
 DELETE https://localhost:7170/api/Product/
 Content-Type: application/json
 
@@ -59,7 +59,7 @@ Content-Type: application/json
   ]
 }
 
-### get list of product
+### (passed) get list of product
 POST https://localhost:7170/api/Product/getAll
 Content-Type: application/json
 
@@ -67,7 +67,7 @@ Content-Type: application/json
   "id": null
 }
 
-### update product
+### (passed) update product
 PUT https://localhost:7170/api/Product/
 Content-Type: application/json
 

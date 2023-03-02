@@ -304,7 +304,7 @@ namespace productstockingv1.Controllers
 
             foreach (var item in getProductInStock)
             {
-                var product = new
+                /*var product = new
                 {
                     id = item.Id,
                     code = item.Code,
@@ -315,7 +315,17 @@ namespace productstockingv1.Controllers
                     onhands = productList.Sum(e => e.Quantity)
                 };
 
-                productData.Add(product);
+                productData.Add(product);*/
+                productData.Add(new
+                {
+                    id = item.Id,
+                    code = item.Code,
+                    stocking = new List<string>(),
+                    name = item.Name,
+                    price = item.Price,
+                    description = item.Description,
+                    onhands = productList.Sum(e => e.Quantity)
+                });
             }
 
 
@@ -331,7 +341,7 @@ namespace productstockingv1.Controllers
                     data = isEqual
                         ? new
                         {
-                            product = productData,
+                            productData
                         }
                         : (object) new List<string>()
                 });
@@ -342,7 +352,7 @@ namespace productstockingv1.Controllers
             }
         }
 
-        //fixme error list of product code
+        //fixme error list of product code 
         [HttpGet("GetByProductCodes")]
         public async Task<ActionResult> GetCodeGet(ListStockProductCode req)
         {
