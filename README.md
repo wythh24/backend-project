@@ -43,7 +43,7 @@
 
 ## Setup
 
-#### Clone project
+#### Clone project for latest version
 
 ```bash
 git clone https://github.com/wythh24/backend-project.git v2.0.0
