@@ -12,8 +12,7 @@
 
 ## About project
 
-- This project build with .Net entity framework core 6 and by code first it’s flexible to any database project because
-  and any platforms
+- This project build with .Net entity framework core 6 and by code first it’s flexible to any relational database
 
 ## Technologies
 
