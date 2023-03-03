@@ -1,6 +1,6 @@
 # backend-project
 
-project version1
+- [Project version](https://github.com/wythh24/backend-project/tags)
 
 ## Table of Contents
 
@@ -12,8 +12,7 @@ project version1
 
 ## About project
 
-- This project build with .Net entity framework core 6 and by code first it’s flexible to any database project because
-  and any platforms
+- This project build with .Net entity framework core 6 and by code first it’s flexible to any relational database
 
 ## Technologies
 
@@ -43,10 +42,10 @@ project version1
 
 ## Setup
 
-#### Clone project
+#### Clone project for latest version
 
 ```bash
-git clone https://github.com/wythh24/backend-project.git
+git clone https://github.com/wythh24/backend-project.git v2.0.0
 ```
 
 #### Configuration connection string
