@@ -29,7 +29,7 @@ namespace productstockingv1.Controllers
         }
 
         // get product with post body (POST)
-        [EnableCors("corsPolicy")]
+        //[EnableCors("corsPolicy")]
         [HttpPost("getAll")]
         public async Task<ActionResult> GetProduct(IdReq req = null)
         {
@@ -126,20 +126,21 @@ namespace productstockingv1.Controllers
 
         // create product
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(ListProductCreateReq req)
+        public async Task<ActionResult> CreateProduct(ListProductCreateReq req)
         {
             //change to Any()
             if (!req.command.Any()) return BadRequest("Request must be filled");
 
             var productList = req.command.Select(item => _mapper.Map<Product>(item)).ToList();
 
-            if (productList.Count != req.command.ToList().Count) return BadRequest("not equal");
+            if (productList.Count != req.command.ToList().Count) return BadRequest("Create product was false");
 
             _context.BeginTransaction();
             try
             {
                 await _context.getRepository<Product, string>().CreateBatchAsync(productList);
                 _context.Commit();
+                
                 return Ok(new
                 {
                     success = true,

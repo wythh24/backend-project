@@ -11,7 +11,7 @@ GET https://localhost:7170/api/Product
 Content-Type: application/json
 
 {
-  "id": []
+  "id": null
 }
 
 ### (passed)  Create product
@@ -80,4 +80,38 @@ Content-Type: application/json
       "description": "desss"
     }
   ]
+}
+
+###test iis
+GET http://192.168.0.49:81/api/Product
+Content-Type: application/json
+
+{
+  "id": [
+  ]
+}
+
+### 
+POST http://192.168.0.49:81/api/Product/getAll
+Content-Type: application/json
+
+{
+  "id": [
+  ]
+}
+
+###
+GET http://192.168.0.49:81/api/Product/GetById/
+Content-Type: application/json
+
+{
+  "id": "fcd62d4b-761e-4df5-8984-33b175ff1c18"
+}
+
+###
+POST http://192.168.0.49:81/api/Product
+Content-Type: application/json
+
+{
+  "command": []
 }

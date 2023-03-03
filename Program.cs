@@ -18,14 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-const string myPolicy = "corsPolicy";
+/*const string myPolicy = "corsPolicy";
 //Enable cors
 builder.Services.AddCors(options =>
     options.AddPolicy(myPolicy,
         build =>
         {
             build.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().SetIsOriginAllowedToAllowWildcardSubdomains();
-        }));
+        }));*/
 
 //comment before modify
 builder.Services.AddDbContext<ProductContext>(
@@ -59,7 +59,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseCors(myPolicy);
+//app.UseCors(myPolicy);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
