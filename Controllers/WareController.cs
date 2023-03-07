@@ -282,7 +282,13 @@ namespace productstockingv1.Controllers
             catch (Exception)
             {
                 _context.RollBack();
-                return BadRequest($"Something gone wrong");
+                return BadRequest(new
+                {
+                    success = false,
+                    statuscode = 304,
+                    message = "No ware deleted",
+                    data = (string) null
+                });
             }
         }
     }

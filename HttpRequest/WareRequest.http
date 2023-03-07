@@ -3,7 +3,6 @@ GET https://localhost:7170/api/Ware/
 Content-Type: application/json
 
 {
-  
 }
 
 ### (passed) get all post
@@ -11,7 +10,6 @@ POST https://localhost:7170/api/Ware/getAll
 Content-Type: application/json
 
 {
-  
 }
 
 ### (passed) get a ware with id (query)
@@ -69,6 +67,30 @@ Content-Type: application/json
 
 {
   "id": [
-    "fc9a282d-8a78-44c4-9dc9-92e12ba10c5a"
+    "1f9174c3-99e5-407f-b3b9-1e4b6599b121"
+  ]
+}
+
+### create ware test
+POST http://192.168.0.33:8884/api/Ware
+Content-Type: application/json
+
+{
+  "command": [
+    {
+      "name": "{{$random.alphabetic(10)}}",
+      "description": "{{$random.alphabetic(12)}}",
+      "code": "{{$random.integer(100, 999)}} {{$random.integer(10, 99)}}-{{$random.integer(10, 99)}}"
+    },
+     {
+      "name": "{{$random.alphabetic(10)}}",
+      "description": "{{$random.alphabetic(12)}}",
+      "code": "{{$random.integer(100, 999)}} {{$random.integer(10, 99)}}-{{$random.integer(10, 99)}}"
+    },
+     {
+      "name": "{{$random.alphabetic(10)}}",
+      "description": "{{$random.alphabetic(12)}}",
+      "code": "{{$random.integer(100, 999)}} {{$random.integer(10, 99)}}-{{$random.integer(10, 99)}}"
+    }
   ]
 }

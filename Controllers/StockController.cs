@@ -263,13 +263,14 @@ namespace productstockingv1.Controllers
                                         {
                                             product = new
                                             {
-                                                Id = e.product.Id,
+                                                id = e.product.Id,
                                                 code = e.product.Code,
                                                 stocking = Stock,
                                                 price = e.product.Price,
                                                 description = e.product.Description,
                                             },
-                                            OnHands = map.Where(e => e.ProductId == p.Id).Sum(k => k.Quantity),
+                                            OnHands = s.Where(e => e.ProductId.Contains(e.product.Id))
+                                                .Sum(k => k.Quantity),
                                         }).ToList(), true, 200, true
                                     )
                                 );
@@ -284,7 +285,7 @@ namespace productstockingv1.Controllers
                     success = true,
                     StatusCode = 200,
                     message = $"Success returned stocking",
-                    data = Stock
+                    data = (string) null
                 }
             );
         }
@@ -408,7 +409,7 @@ namespace productstockingv1.Controllers
                     success = true,
                     StatusCode = 200,
                     message = $"Success returned stocking",
-                    data = Stock
+                    data = (string) null
                 }
             );
         }
@@ -717,8 +718,32 @@ namespace productstockingv1.Controllers
                     .Where(e => e.Code == reqItem.ProductCode);
 
                 // Once req must has two require data
-                if (ware.Any() && product.Any())
+                /*
+                 * if ((from item in product from wareReq in ware select _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                                               .Where(e => item.Id == e.ProductId && wareReq.Id == e.WareId)).Any(isExist => isExist.Any()))
+                 */
+                if (
+                    ware.Any()
+                    && product.Any())
                 {
+                    foreach (var item in product)
+                    {
+                        foreach (var wareReq in ware)
+                        {
+                            var isExist = _context.getRepository<Stocking, string>().GetAllQueryable().ToList()
+                                .Where(e => item.Id == e.ProductId && wareReq.Id == e.WareId);
+
+                            if (isExist.Any())
+                                return BadRequest(new
+                                {
+                                    success = false,
+                                    statusecode = 400,
+                                    message = "Product already in stock",
+                                    data = (string) null
+                                });
+                        }
+                    }
+
                     var stock = _mapper.Map<Stocking>(reqItem);
                     stockList.Add(stock);
                 }
@@ -1010,32 +1035,13 @@ namespace productstockingv1.Controllers
                 if (!isExistTarget)
                 {
                     await _context.getRepository<Stocking, string>().CreateBatchAsync(AddNewStock);
-                    
+                    _context.Commit();
                     //customize response information
                     //fixme on develop response
-                    var resNewData = new StockTransferReq();
-                    foreach (var item in req.commands)
-                    {
-                        // initialize value as an object
-                        resNewData = new StockTransferReq
-                        {
-                            productId = item.productId,
-                            quantity = item.quantity,
-                            sourceWareId = item.sourceWareId,
-                            targetWareId = item.targetWareId
-                        };
-                    }
-
-                    return Ok(new
-                    {
-                        success = true,
-                        StatusCode(200).StatusCode,
-                        message =
-                            $"The quantity,{resNewData.quantity}, of the stocking for the product id " +
-                            $"{resNewData.productId}" +
-                            $" in the ware id {resNewData.sourceWareId} transfer to the ware id {resNewData.targetWareId}",
-                        data = $"{resNewData.quantity}: {resNewData.sourceWareId} > {resNewData.targetWareId}"
-                    });
+                    //modified response to create stocking for haven't stock of ware and product
+                    return Ok(ExtenFunction.ResponseDefault("Stocking", AddNewStock.Select(e => e.Id).ToList(), true,
+                        201, true, $"Successfully created {AddNewStock.Count} stocking")
+                    );
                 }
 
                 await _context.getRepository<Stocking, string>().UpdateBatchAsync(StockTransferList);

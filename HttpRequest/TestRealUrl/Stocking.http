@@ -1,0 +1,14 @@
+﻿### transfer
+PUT http://192.168.0.33:8884/api/Stock/transfer
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "productId": "73b3cb2f-77a2-41e5-ae86-014ba188843b",
+      "quantity": 1,
+      "sourceWareId": "1f9174c3-99e5-407f-b3b9-1e4b6599b121",
+      "targetWareId": "239d546e-5dd4-4011-b70f-24cf46e18531"
+    }
+  ]
+}

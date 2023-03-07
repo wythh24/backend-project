@@ -29,62 +29,106 @@ namespace productstockingv1.Controllers
         }
 
         // get product with post body (POST)
-        //[EnableCors("corsPolicy")]
         [HttpPost("getAll")]
         public async Task<ActionResult> GetProduct(IdReq req = null)
         {
-            var ProductList = new List<Product>();
-
             //fixme get product without loop
             if (req.Id != null)
             {
-                foreach (var item in req.Id)
-                {
-                    var p = await _context.getRepository<Product, string>().GetAsync(item);
-                    if (p != null) ProductList.Add(p);
-                }
+                var proList = _context.getRepository<Product, string>().GetAllQueryable()
+                    .Where(e => req.Id.Contains(e.Id)).Include(e => e.Stockings).ToList();
 
-                return Ok(ExtenFunction.ResponseDefault("Product", ProductList));
+                return Ok(ExtenFunction.ResponseDefault("Product", proList.Select(e => new
+                {
+                    id = e.Id,
+                    code = e.Code,
+                    stocking = e.Stockings.Select(s => new
+                    {
+                        id = s.Id,
+                        productid = s.ProductId,
+                        wareid = s.WareId,
+                        quantity = s.Quantity,
+                        documentdate = s.DocumentDate,
+                        postingdate = s.PostingDate
+                    }).Where(w => w.productid == e.Id).ToList(),
+                    name = e.Name,
+                    price = e.Price,
+                    description = e.Description
+                }).ToList()));
             }
 
             //modified delete else if 
-            var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
+            var all = _context.getRepository<Product, string>().GetAllQueryable().Include(e => e.Stockings).ToList();
 
-            var result = _mapper.Map<List<ProductResponse>>(all);
-
-            return Ok(ExtenFunction.ResponseDefault("Product", result, false));
+            return Ok(ExtenFunction.ResponseDefault("Product", all.Select(e => new
+            {
+                id = e.Id,
+                code = e.Code,
+                stocking = e.Stockings.Select(s => new
+                {
+                    id = s.Id,
+                    productid = s.ProductId,
+                    wareid = s.WareId,
+                    quantity = s.Quantity,
+                    documentdate = s.DocumentDate,
+                    postingdate = s.PostingDate
+                }).Where(w => w.productid == e.Id).ToList(),
+                name = e.Name,
+                price = e.Price,
+                description = e.Description
+            }).ToList(),false));
         }
 
         // request with body (GET)
         [HttpGet]
         public async Task<ActionResult> GetProductById([FromBody] IdReq req = null)
         {
-            var ProductList = new List<Product>();
-            //modified condition
-            //fixme query style without loop
-
+            // modified using query 
+            //fixme get product without loop
             if (req.Id != null)
             {
-                //fixme get list of product without using loop
-                foreach (var item in req.Id)
-                {
-                    var p = await _context.getRepository<Product, string>().GetAsync(item);
-                    if (p != null) ProductList.Add(p);
-                }
+                var proList = _context.getRepository<Product, string>().GetAllQueryable()
+                    .Where(e => req.Id.Contains(e.Id)).Include(e => e.Stockings).ToList();
 
-                return Ok(ExtenFunction.ResponseDefault("Product", ProductList));
+                return Ok(ExtenFunction.ResponseDefault("Product", proList.Select(e => new
+                {
+                    id = e.Id,
+                    code = e.Code,
+                    stocking = e.Stockings.Select(s => new
+                    {
+                        id = s.Id,
+                        productid = s.ProductId,
+                        wareid = s.WareId,
+                        quantity = s.Quantity,
+                        documentdate = s.DocumentDate,
+                        postingdate = s.PostingDate
+                    }).Where(w => w.productid == e.Id).ToList(),
+                    name = e.Name,
+                    price = e.Price,
+                    description = e.Description
+                }).ToList()));
             }
 
+            //modified delete else if 
+            var all = _context.getRepository<Product, string>().GetAllQueryable().Include(e => e.Stockings).ToList();
 
-            var all = _context.getRepository<Product, string>().GetAllQueryable().ToList();
-
-            var result = _mapper.Map<List<ProductResponse>>(all);
-
-            return Ok(ExtenFunction.ResponseDefault(
-                "Product",
-                result,
-                false
-            ));
+            return Ok(ExtenFunction.ResponseDefault("Product", all.Select(e => new
+            {
+                id = e.Id,
+                code = e.Code,
+                stocking = e.Stockings.Select(s => new
+                {
+                    id = s.Id,
+                    productid = s.ProductId,
+                    wareid = s.WareId,
+                    quantity = s.Quantity,
+                    documentdate = s.DocumentDate,
+                    postingdate = s.PostingDate
+                }).Where(w => w.productid == e.Id).ToList(),
+                name = e.Name,
+                price = e.Price,
+                description = e.Description
+            }).ToList(),false));
         }
 
         // query string
@@ -140,7 +184,7 @@ namespace productstockingv1.Controllers
             {
                 await _context.getRepository<Product, string>().CreateBatchAsync(productList);
                 _context.Commit();
-                
+
                 return Ok(new
                 {
                     success = true,

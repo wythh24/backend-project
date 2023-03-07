@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Org.BouncyCastle.Crypto.Tls;
@@ -11,30 +12,43 @@ using productstockingv1.Interfaces;
 using productstockingv1.Repository;
 using productstockingv1.Models.Request;
 using productstockingv1.Validation;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//modified using statement in (appsettings.json)
+// var config = new ConfigurationBuilder()
+//     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
 
 //ignore cycle
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-/*const string myPolicy = "corsPolicy";
+const string policy = "myPolicy";
+
 //Enable cors
 builder.Services.AddCors(options =>
-    options.AddPolicy(myPolicy,
-        build =>
-        {
-            build.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().SetIsOriginAllowedToAllowWildcardSubdomains();
-        }));*/
+    {
+        options.AddPolicy(policy,
+            build => { build.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin(); });
+    }
+);
+
 
 //comment before modify
-builder.Services.AddDbContext<ProductContext>(
+/*builder.Services.AddDbContext<ProductContext>(
     options =>
     {
         options.UseMySql(builder.Configuration.GetConnectionString("Development"),
             Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.23-mysql"));
-    });
-//add dbcontext
+    });*/
+
+builder.Services.AddDbContext<ProductContext>(
+    options => { options.UseSqlServer(builder.Configuration.GetConnectionString("Development")); },
+    ServiceLifetime.Transient
+);
+
+//add DbContext
 builder.Services.AddDbContext<IProductContext, ProductContext>();
 
 //add scope
@@ -53,13 +67,13 @@ builder.Services.AddFluentValidation();
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//app.UseCors(myPolicy);
+//check is enable
+app.UseCors(policy);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

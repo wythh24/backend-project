@@ -1,6 +1,7 @@
 using System.Data;
 using productstockingv1.Interfaces;
 using productstockingv1.models;
+using productstockingv1.Models.Request;
 
 namespace productstockingv1.ExtensionFunction;
 
@@ -82,7 +83,6 @@ public static class ExtenFunction
             if (_data.Count is 0 or 1) _message = $"Successfully returned {_controller}";
         }
 
-
         return new
         {
             success = _success,
@@ -91,4 +91,10 @@ public static class ExtenFunction
             data = _data
         };
     }
+
+    /*public static async Task<bool> IsExistStock(IEnumerable<Product> req)
+    {
+        var getReqList = await _context.getRepository<Stocking, string>().GetAsync(req.Id);
+        return getReqList != null;
+    }*/
 }

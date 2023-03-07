@@ -3,7 +3,7 @@ POST https://localhost:7170/api/Product/getAll
 Content-Type: application/json
 
 {
-  "id": null
+  "id":["f5362914-d8ab-45b7-b9ee-cd964ee0689"]
 }
 
 ### (passed) Get all products (body)
@@ -83,21 +83,19 @@ Content-Type: application/json
 }
 
 ###test iis
-GET http://192.168.0.49:81/api/Product
+GET https://www.productapi.dev:81/api/Product
 Content-Type: application/json
 
 {
-  "id": [
-  ]
+  "id": null
 }
 
 ### 
 POST http://192.168.0.49:81/api/Product/getAll
-Content-Type: application/json
+Content-Type: application/json   
 
 {
-  "id": [
-  ]
+  "id": null
 }
 
 ###
@@ -115,3 +113,6 @@ Content-Type: application/json
 {
   "command": []
 }
+
+### test request
+GET http://192.168.0.33:8881/api/Product/2103u021

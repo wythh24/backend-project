@@ -149,3 +149,17 @@ Content-Type: application/json
     }
   ]
 }
+
+### test exist stock
+POST https://localhost:7170/api/Stock/Create
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "productCode": "9.198268",
+      "wareCode": "22fd22",
+      "quantity": 10
+    }
+  ]
+}
