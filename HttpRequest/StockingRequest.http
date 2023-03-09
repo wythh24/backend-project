@@ -22,7 +22,7 @@ GET https://localhost:7170/api/Stock/GetById
 Content-Type: application/json
 
 {
-  "id": "D7690DB1-BDEC-407B-A57E-A2FA4F986AC2"
+  "id": null
 }
 
 ### (passed) Get By ProductId 
@@ -142,10 +142,10 @@ Content-Type: application/json
 {
   "commands": [
     {
-      "productId": "73b3cb2f-77a2-41e5-ae86-014ba188843b",
-      "quantity": 1,
+      "productId": "05ecfab3-87c7-4976-9185-c902c7ef8f2c",
+      "quantity": 5,
       "sourceWareId": "1f9174c3-99e5-407f-b3b9-1e4b6599b121",
-      "targetWareId": "239d546e-5dd4-4011-b70f-24cf46e18531"
+      "targetWareId": "a4030801-3892-41c1-91eb-1ab1cefdb973"
     }
   ]
 }
@@ -157,9 +157,32 @@ Content-Type: application/json
 {
   "commands": [
     {
-      "productCode": "9.198268",
-      "wareCode": "22fd22",
-      "quantity": 10
+      "productCode": "new-99992",
+      "wareCode": "11d11",
+      "quantity": 110
+    }
+  ]
+}
+
+####
+GET http://192.168.0.33:8884/api/Stock/Getall
+Content-Type: application/json
+
+{
+  "id": null
+}
+
+### v2 in develop can transfer only one product for each request
+PUT http://192.168.0.33:8884/api/Stock/transfer
+Content-Type: application/json
+
+{
+  "commands": [
+    {
+      "productId": "05ecfab3-87c7-4976-9185-c902c7ef8f2c",
+      "quantity": 5,
+      "sourceWareId": "1f9174c3-99e5-407f-b3b9-1e4b6599b121",
+      "targetWareId": "a4030801-3892-41c1-91eb-1ab1cefdb973"
     }
   ]
 }

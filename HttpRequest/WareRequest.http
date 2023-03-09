@@ -29,11 +29,7 @@ Content-Type: application/json
 
 {
   "command": [
-    {
-      "name": "1",
-      "description": "test dest",
-      "code": "khmer2"
-    },
+   
     {
       "name": "create test",
       "description": "test dest",
@@ -78,16 +74,6 @@ Content-Type: application/json
 {
   "command": [
     {
-      "name": "{{$random.alphabetic(10)}}",
-      "description": "{{$random.alphabetic(12)}}",
-      "code": "{{$random.integer(100, 999)}} {{$random.integer(10, 99)}}-{{$random.integer(10, 99)}}"
-    },
-     {
-      "name": "{{$random.alphabetic(10)}}",
-      "description": "{{$random.alphabetic(12)}}",
-      "code": "{{$random.integer(100, 999)}} {{$random.integer(10, 99)}}-{{$random.integer(10, 99)}}"
-    },
-     {
       "name": "{{$random.alphabetic(10)}}",
       "description": "{{$random.alphabetic(12)}}",
       "code": "{{$random.integer(100, 999)}} {{$random.integer(10, 99)}}-{{$random.integer(10, 99)}}"

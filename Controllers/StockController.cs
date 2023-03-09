@@ -961,6 +961,7 @@ namespace productstockingv1.Controllers
 
             var StockTransferList = new List<Stocking>();
             var AddNewStock = new List<Stocking>();
+            var TransferNewStockList = new List<Stocking>();
             var isExistTarget = true;
 
             foreach (var item in req.commands.ToList())
@@ -1016,11 +1017,28 @@ namespace productstockingv1.Controllers
                             WareCode = getWareCode.Code,
                             Quantity = item.quantity
                         };
+
                         if (newStock != null)
                         {
                             isExistTarget = false;
                             AddNewStock.Add(_mapper.Map<Stocking>(newStock));
                         }
+
+                        foreach (var source in sourceWare)
+                        {
+                            foreach (var new_stock in AddNewStock)
+                            {
+                                if (source.Quantity >= item.quantity)
+                                {
+                                    source.Quantity -= item.quantity;
+                                    new_stock.Quantity += item.quantity;
+                                }
+                                else return BadRequest($"Invalid quantity to transfer");
+                            }
+                        }
+
+                        StockTransferList.AddRange(sourceWare);
+                        TransferNewStockList.AddRange(AddNewStock);
                     }
                     catch (Exception)
                     {
@@ -1034,7 +1052,8 @@ namespace productstockingv1.Controllers
             {
                 if (!isExistTarget)
                 {
-                    await _context.getRepository<Stocking, string>().CreateBatchAsync(AddNewStock);
+                    await _context.getRepository<Stocking, string>().UpdateBatchAsync(StockTransferList);
+                    await _context.getRepository<Stocking, string>().CreateBatchAsync(TransferNewStockList);
                     _context.Commit();
                     //customize response information
                     //fixme on develop response
