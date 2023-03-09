@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Atech\\month2\\week4\\cloneToHost\\backend-project_clone\\productstockingv1.csproj": {}
+    "D:\\Atech\\month3\\week2\\backend-project\\productstockingv1.csproj": {}
   },
   "projects": {
-    "D:\\Atech\\month2\\week4\\cloneToHost\\backend-project_clone\\productstockingv1.csproj": {
+    "D:\\Atech\\month3\\week2\\backend-project\\productstockingv1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Atech\\month2\\week4\\cloneToHost\\backend-project_clone\\productstockingv1.csproj",
+        "projectUniqueName": "D:\\Atech\\month3\\week2\\backend-project\\productstockingv1.csproj",
         "projectName": "productstockingv1",
-        "projectPath": "D:\\Atech\\month2\\week4\\cloneToHost\\backend-project_clone\\productstockingv1.csproj",
+        "projectPath": "D:\\Atech\\month3\\week2\\backend-project\\productstockingv1.csproj",
         "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "D:\\Atech\\month2\\week4\\cloneToHost\\backend-project_clone\\obj\\",
+        "outputPath": "D:\\Atech\\month3\\week2\\backend-project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

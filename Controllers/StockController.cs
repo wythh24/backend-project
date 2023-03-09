@@ -1011,11 +1011,12 @@ namespace productstockingv1.Controllers
 
                     try
                     {
+                        //initialize quantity 0 to can't duplicate value 
                         var newStock = new StockingCreateReq()
                         {
                             ProductCode = getProCode.Code,
                             WareCode = getWareCode.Code,
-                            Quantity = item.quantity
+                            Quantity = 0
                         };
 
                         if (newStock != null)

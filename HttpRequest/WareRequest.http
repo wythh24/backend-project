@@ -31,9 +31,9 @@ Content-Type: application/json
   "command": [
    
     {
-      "name": "create test",
-      "description": "test dest",
-      "code": "khmer3"
+      "name": "new ware test",
+      "description": "new des test",
+      "code": "testcode"
     }
   ]
 }

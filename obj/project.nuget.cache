@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QXoIVKokuUU2TD9h0klHWu3SWd0lWKWlaotamjqdQ/Rynz1mNrZOXQaY/fdJt/92hrCGaEF5oQYraDMnc9McKw==",
+  "dgSpecHash": "V5uOUiYx8nGPEf/7LbAGlUMzbKHFkD86PIB0MySHH2ErZ3QB/2gFe/2hWkge7ULoUo6zYhh4LFVjOg04UonNYg==",
   "success": true,
-  "projectFilePath": "D:\\Atech\\month2\\week4\\cloneToHost\\backend-project_clone\\productstockingv1.csproj",
+  "projectFilePath": "D:\\Atech\\month3\\week2\\backend-project\\productstockingv1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
